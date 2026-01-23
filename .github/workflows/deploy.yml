@@ -1,0 +1,80 @@
+on:
+  - push
+
+jobs:
+  infra:
+    if: github.ref == 'refs/heads/main' && startsWith(github.path, 'infra/')
+    runs-on: "ubuntu-latest"
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: "Checkout code"
+        uses: actions/checkout@v4
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.9.0
+      - name: "Configure AWS credentials(OIDC)"
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: "${{ secrets.AWS_ROLE_TO_ASSUME }}"
+          role-session-name: "github-actions"
+          aws-region: "${{ vars.AWS_REGION }}"
+      - name: "Terraform deploy"
+        run: bash ${{ github.workspace }}/.github/workflows/terraform-deploy.sh
+        working-directory: "infra/environments/prod"
+  infra_output:
+    if: github.ref == 'refs/heads/main' && !startsWith(github.path, 'infra/')
+    needs: infra
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    outputs:
+      user_interface_bucket: ${{ steps.terraform_output.outputs.user_interface_bucket }}
+      user_interface_distribution_domain_name: ${{ steps.terraform_output.outputs.user_interface_distribution_domain_name }}
+    steps:
+      - name: "Checkout code"
+        uses: actions/checkout@v4
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.9.0
+          terraform_wrapper: false
+      - name: "Configure AWS credentials(OIDC)"
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: "${{ secrets.AWS_ROLE_TO_ASSUME }}"
+          role-session-name: "github-actions"
+          aws-region: "${{ vars.AWS_REGION }}"
+      - name: "Terraform output"
+        id: terraform_output
+        run: bash ${{ github.workspace }}/.github/workflows/terraform-output.sh
+        working-directory: "infra/environments/prod"
+  frontend:
+    if: github.ref == 'refs/heads/main' && !startsWith(github.path, 'infra/')
+    needs: infra_output
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: "Configure AWS credentials(OIDC)"
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: "${{ secrets.AWS_ROLE_TO_ASSUME }}"
+          role-session-name: "github-actions"
+          aws-region: "${{ vars.AWS_REGION }}"
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - name: Frontend Sync
+        env:
+          USER_INTERFACE_BUCKET: ${{ needs.infra_output.outputs.user_interface_bucket }}
+        run: bash ${{ github.workspace }}/.github/workflows/frontend-sync.sh
+        working-directory: "frontend"
