@@ -28,7 +28,7 @@ jobs:
         run: bash ${{ github.workspace }}/.github/workflows/terraform-deploy.sh
         working-directory: "infra/environments/prod"
   # This job fetches outputs needed by the frontend
-  infra_output:
+  bridge:
     uses: ./.github/workflows/frontend.yml
     needs: infra
     secrets:
