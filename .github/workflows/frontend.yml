@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - "frontend/**"
+  workflow_call:
 
 jobs:
   # This job fetches outputs needed by the frontend
