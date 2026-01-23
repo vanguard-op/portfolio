@@ -75,6 +75,7 @@ jobs:
         with:
           node-version: "20"
           cache: "npm"
+          cache-dependency-path: 'frontend/package-lock.json'
       - name: Frontend Sync
         env:
           USER_INTERFACE_BUCKET: ${{ needs.infra_output.outputs.user_interface_bucket }}
