@@ -1,9 +1,12 @@
+name: Infrastructure Deploy
 on:
-  - push
+  push:
+    branches: [main]
+    paths:
+      - "infra/**"
 
 jobs:
   infra:
-    if: github.ref == 'refs/heads/main' && startsWith(github.path, 'infra/')
     runs-on: "ubuntu-latest"
     permissions:
       id-token: write
@@ -12,7 +15,7 @@ jobs:
       - name: "Checkout code"
         uses: actions/checkout@v4
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3 # Updated to v3 for 2026
         with:
           terraform_version: 1.9.0
       - name: "Configure AWS credentials(OIDC)"
@@ -24,8 +27,8 @@ jobs:
       - name: "Terraform deploy"
         run: bash ${{ github.workspace }}/.github/workflows/terraform-deploy.sh
         working-directory: "infra/environments/prod"
+  # This job fetches outputs needed by the frontend
   infra_output:
-    if: github.ref == 'refs/heads/main' && !startsWith(github.path, 'infra/')
     needs: infra
     runs-on: ubuntu-latest
     permissions:
@@ -33,12 +36,11 @@ jobs:
       contents: read
     outputs:
       user_interface_bucket: ${{ steps.terraform_output.outputs.user_interface_bucket }}
-      user_interface_distribution_domain_name: ${{ steps.terraform_output.outputs.user_interface_distribution_domain_name }}
     steps:
       - name: "Checkout code"
         uses: actions/checkout@v4
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.9.0
           terraform_wrapper: false
@@ -52,8 +54,8 @@ jobs:
         id: terraform_output
         run: bash ${{ github.workspace }}/.github/workflows/terraform-output.sh
         working-directory: "infra/environments/prod"
+
   frontend:
-    if: github.ref == 'refs/heads/main' && !startsWith(github.path, 'infra/')
     needs: infra_output
     runs-on: ubuntu-latest
     permissions:
@@ -61,7 +63,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: "Configure AWS credentials(OIDC)"
         uses: aws-actions/configure-aws-credentials@v4
         with:
