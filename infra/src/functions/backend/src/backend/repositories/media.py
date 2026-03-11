@@ -8,7 +8,7 @@ class MediaRepository:
 
     def create_media_upload_url(self, model: MediaCreateModel) -> str:
         """Create media upload url from s3"""
-        return s3.create_media_upload_url(model.directory.value, model.filename)
+        return s3.create_media_upload_url(model.directory.value, model.filename, model.content_type)
 
     def list_media_object(
         self, directory: str, page_index=0, page_size=10

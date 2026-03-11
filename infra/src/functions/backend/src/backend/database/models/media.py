@@ -12,6 +12,7 @@ class MediaDirectoriesEnum(str, Enum):
 class MediaCreateModel(BaseModel):
     directory: MediaDirectoriesEnum
     filename: str
+    content_type: str | None = None
 
 
 class MediaModel(BaseModel):

@@ -14,11 +14,13 @@ repository = MediaRepository()
 
 # print(repository.create_media_upload_url(MediaCreateModel(directory="projects", filename="test.txt")))
 url = repository.create_media_upload_url(
-    MediaCreateModel(directory=MediaDirectoriesEnum.PROJECTS, filename="portfolio.md")
+    MediaCreateModel(directory=MediaDirectoriesEnum.IMAGES, filename="ahmad.jpg")
 )
 
 # PUT to url
 res = requests.put(
-    url, data=open(Path(__file__).parent.joinpath("assets/portfolio.md"), "rb").read()
+    url,
+    data=open(Path(__file__).parent.joinpath("assets/ahmad.jpg"), "rb").read(),
+    headers=None,
 )
 print(res.status_code, res.text)

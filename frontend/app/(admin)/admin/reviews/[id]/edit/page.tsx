@@ -6,6 +6,7 @@ import { useRepository } from "@/lib/hooks/use-repository";
 import { uploadMarkdown, fetchMarkdownContent } from "@/lib/hooks/use-markdown-editor";
 import { FormCard, FormField } from "@/components/admin-form";
 import { MarkdownEditor } from "@/components/markdown-editor";
+import { ImagePicker } from "@/components/image-picker";
 
 export default function EditReviewPage() {
     const repo = useRepository();
@@ -23,7 +24,6 @@ export default function EditReviewPage() {
             const r = reviews.find(r => r.id === id);
             if (!r) { setError("Review not found."); return; }
             setForm({ client_name: r.client_name, client_title: r.client_title, client_image_uri: r.client_image.uri, client_image_alt: r.client_image.alt_text, company_image_uri: r.company_image.uri, company_image_alt: r.company_image.alt_text });
-            // Load message: if it's a URI-like string, fetch it as markdown
             if (r.message?.startsWith("http") || r.message?.includes("/")) {
                 const md = await fetchMarkdownContent(r.message);
                 setMessage(md || r.message);
@@ -67,19 +67,17 @@ export default function EditReviewPage() {
                 <FormField label="Client Title" value={form.client_title} onChange={set("client_title")} required />
             </div>
             <MarkdownEditor value={message} onChange={setMessage} label="Review Message" rows={8} hint="Saving will overwrite the existing .md file in S3." />
+
             <div className="border-t border-neutral-800 pt-4 space-y-4">
                 <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">Client Image</p>
-                <div className="grid grid-cols-2 gap-4">
-                    <FormField label="Image URI" value={form.client_image_uri} onChange={set("client_image_uri")} />
-                    <FormField label="Alt Text" value={form.client_image_alt} onChange={set("client_image_alt")} />
-                </div>
+                <ImagePicker label="Client Photo" value={form.client_image_uri} onChange={uri => setForm(f => ({ ...f, client_image_uri: uri }))} />
+                <FormField label="Alt Text" value={form.client_image_alt} onChange={set("client_image_alt")} />
             </div>
+
             <div className="border-t border-neutral-800 pt-4 space-y-4">
                 <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">Company Image</p>
-                <div className="grid grid-cols-2 gap-4">
-                    <FormField label="Image URI" value={form.company_image_uri} onChange={set("company_image_uri")} />
-                    <FormField label="Alt Text" value={form.company_image_alt} onChange={set("company_image_alt")} />
-                </div>
+                <ImagePicker label="Company Logo" value={form.company_image_uri} onChange={uri => setForm(f => ({ ...f, company_image_uri: uri }))} />
+                <FormField label="Alt Text" value={form.company_image_alt} onChange={set("company_image_alt")} />
             </div>
         </FormCard>
     );

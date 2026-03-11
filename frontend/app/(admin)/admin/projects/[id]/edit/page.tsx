@@ -6,6 +6,7 @@ import { useRepository } from "@/lib/hooks/use-repository";
 import { uploadMarkdown, fetchMarkdownContent } from "@/lib/hooks/use-markdown-editor";
 import { FormCard, FormField, FormTextarea } from "@/components/admin-form";
 import { MarkdownEditor } from "@/components/markdown-editor";
+import { ImagePicker } from "@/components/image-picker";
 
 export default function EditProjectPage() {
     const repo = useRepository();
@@ -20,11 +21,7 @@ export default function EditProjectPage() {
 
     useEffect(() => {
         repo.getProjectById(id).then(async (p) => {
-            setForm({
-                title: p.title, overview: p.overview, content_uri: p.content_uri,
-                image_uri: p.image.uri, image_alt: p.image.alt_text,
-                stacks: (p.stacks ?? []).map(s => s.name).join(", ")
-            });
+            setForm({ title: p.title, overview: p.overview, content_uri: p.content_uri, image_uri: p.image.uri, image_alt: p.image.alt_text, stacks: (p.stacks ?? []).map(s => s.name).join(", ") });
             if (p.content_url) {
                 const md = await fetchMarkdownContent(p.content_url);
                 setContent(md);
@@ -63,7 +60,12 @@ export default function EditProjectPage() {
             <FormField label="Title" value={form.title} onChange={set("title")} required />
             <FormTextarea label="Overview" value={form.overview} onChange={set("overview")} rows={3} required />
             <MarkdownEditor value={content} onChange={setContent} label="Project Content" hint="Saving will overwrite the existing .md file in S3." />
-            <FormField label="Cover Image URI" value={form.image_uri} onChange={set("image_uri")} hint="S3 key or URL for the cover image." required />
+            <ImagePicker
+                label="Cover Image"
+                value={form.image_uri}
+                onChange={uri => setForm(f => ({ ...f, image_uri: uri }))}
+                hint="Select an existing image or upload a new one."
+            />
             <FormField label="Image Alt Text" value={form.image_alt} onChange={set("image_alt")} />
             <FormField label="Tech Stacks" value={form.stacks} onChange={set("stacks")} hint="Comma-separated list (e.g. Next.js, FastAPI, PostgreSQL)" />
         </FormCard>

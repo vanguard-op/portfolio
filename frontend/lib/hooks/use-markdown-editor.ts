@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
 
 /**
  * Uploads markdown content to S3 via a presigned URL.
@@ -15,10 +15,15 @@ export async function uploadMarkdown(directory: string, filename: string, conten
     const safeFilename = `${filename.replace(/[^a-zA-Z0-9_-]/g, "_")}.md`;
 
     // 1. Get presigned upload URL
+    const contentType = "text/markdown";
     const urlRes = await fetch(`${API_BASE}/v1/media/upload-url`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ directory, filename: safeFilename }),
+        body: JSON.stringify({ 
+            directory, 
+            filename: safeFilename,
+            content_type: contentType
+        }),
     });
     if (!urlRes.ok) throw new Error("Failed to get upload URL");
     const presignedUrl: string = await urlRes.json();
@@ -26,7 +31,7 @@ export async function uploadMarkdown(directory: string, filename: string, conten
     // 2. PUT the markdown content to S3 via the presigned URL
     const putRes = await fetch(presignedUrl, {
         method: "PUT",
-        headers: { "Content-Type": "text/markdown" },
+        headers: { "Content-Type": contentType },
         body: content,
     });
     if (!putRes.ok) throw new Error("Failed to upload content to S3");
