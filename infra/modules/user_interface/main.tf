@@ -26,9 +26,11 @@ data "aws_iam_policy_document" "origin_bucket_policy" {
 }
 
 resource "aws_s3_bucket" "portfolio" {
+  bucket_prefix = "portfolio-"
   tags = {
     Name = "portfolio"
   }
+  force_destroy = true
 }
 
 resource "aws_s3_bucket_policy" "portfolio" {

@@ -1,0 +1,13 @@
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile.local
+    container_name: portfolio_backend_local
+    ports:
+      - "3000:8000"
+    volumes:
+      - ./src/backend/:/var/task
+      - ../internal/src/internal:/var/task/internal
+    env_file:
+      - .env.local

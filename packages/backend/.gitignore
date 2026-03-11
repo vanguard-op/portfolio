@@ -1,0 +1,6 @@
+.aws-sam
+__pycache__
+.venv
+**/*_data
+*.env*
+tests/assets

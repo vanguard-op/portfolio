@@ -1,11 +1,19 @@
-variable "function_name" {
-  type        = string
-  description = "The name of the function"
-  default     = "rest_handler"
+variable "database_env_vars" {
+  type        = map(string)
+  description = "Database environemnt variables"
 }
 
-variable "source_dir" {
-  type        = string
-  description = "The source directory of the function"
-  default     = "../../src/functions/rest_handler"
+variable "tables_arn" {
+  type        = list(string)
+  description = "List of all DynamoDB table ARNs"
+}
+
+variable "storage_env_vars" {
+  type        = map(string)
+  description = "Storage environemnt variables"
+}
+
+variable "storages_arn" {
+  type        = list(string)
+  description = "List of all Storage ARNs"
 }
