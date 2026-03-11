@@ -3,20 +3,29 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useRepository } from "@/lib/hooks/use-repository";
+import { uploadMarkdown, fetchMarkdownContent } from "@/lib/hooks/use-markdown-editor";
 import { FormCard, FormField } from "@/components/admin-form";
+import { MarkdownEditor } from "@/components/markdown-editor";
 
 export default function EditArticlePage() {
     const repo = useRepository();
     const router = useRouter();
     const { id } = useParams<{ id: string }>();
+
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [form, setForm] = useState({ title: "", content_uri: "", image_uri: "", image_alt: "" });
+    const [content, setContent] = useState("");
 
     useEffect(() => {
-        repo.getArticleById(id).then(a => {
+        repo.getArticleById(id).then(async (a) => {
             setForm({ title: a.title, content_uri: a.content_uri, image_uri: a.image.uri, image_alt: a.image.alt_text });
+            // Load existing markdown content from S3 via content_url
+            if (a.content_url) {
+                const md = await fetchMarkdownContent(a.content_url);
+                setContent(md);
+            }
         }).catch(() => setError("Failed to load article.")).finally(() => setFetching(false));
     }, [id, repo]);
 
@@ -27,23 +36,30 @@ export default function EditArticlePage() {
         try {
             setLoading(true);
             setError(null);
+            // Re-upload to same key (overwrites existing file in S3)
+            const contentUri = await uploadMarkdown("articles", form.title, content);
             const existing = await repo.getArticleById(id);
-            await repo.updateArticle(id, { ...existing, title: form.title, content_uri: form.content_uri, image: { uri: form.image_uri, alt_text: form.image_alt, url: form.image_uri } });
+            await repo.updateArticle(id, {
+                ...existing,
+                title: form.title,
+                content_uri: contentUri,
+                image: { uri: form.image_uri, alt_text: form.image_alt, url: form.image_uri },
+            });
             router.push("/admin/articles");
-        } catch {
-            setError("Failed to update article.");
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Failed to update article.");
         } finally {
             setLoading(false);
         }
     };
 
-    if (fetching) return <div className="flex items-center justify-center py-24 text-neutral-500">Loading...</div>;
+    if (fetching) return <div className="flex items-center justify-center py-24 text-neutral-500 animate-pulse">Loading article...</div>;
 
     return (
         <FormCard title="Edit Article" onSubmit={handleSubmit} loading={loading} backHref="/admin/articles" error={error} submitLabel="Update Article">
             <FormField label="Title" value={form.title} onChange={set("title")} required />
-            <FormField label="Content URI" value={form.content_uri} onChange={set("content_uri")} hint="S3 key or path to the markdown content file." required />
-            <FormField label="Image URI" value={form.image_uri} onChange={set("image_uri")} hint="S3 key or URL for the cover image." required />
+            <MarkdownEditor value={content} onChange={setContent} label="Article Content" hint="Saving will overwrite the existing .md file in S3." />
+            <FormField label="Cover Image URI" value={form.image_uri} onChange={set("image_uri")} hint="S3 key or URL for the cover image." required />
             <FormField label="Image Alt Text" value={form.image_alt} onChange={set("image_alt")} />
         </FormCard>
     );

@@ -3,37 +3,45 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useRepository } from "@/lib/hooks/use-repository";
+import { uploadMarkdown } from "@/lib/hooks/use-markdown-editor";
 import { FormCard, FormField } from "@/components/admin-form";
+import { MarkdownEditor } from "@/components/markdown-editor";
 
 export default function CreateArticlePage() {
     const repo = useRepository();
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [form, setForm] = useState({ title: "", content_uri: "", image_uri: "", image_alt: "" });
+    const [form, setForm] = useState({ title: "", image_uri: "", image_alt: "" });
+    const [content, setContent] = useState("");
 
     const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => setForm(f => ({ ...f, [k]: e.target.value }));
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!form.title || !form.content_uri || !form.image_uri) { setError("All required fields must be filled."); return; }
+        if (!form.title || !content || !form.image_uri) { setError("Title, content, and image URI are required."); return; }
         try {
             setLoading(true);
             setError(null);
-            await repo.createArticle({ title: form.title, content_uri: form.content_uri, image: { uri: form.image_uri, alt_text: form.image_alt, url: form.image_uri } });
+            const contentUri = await uploadMarkdown("articles", form.title, content);
+            await repo.createArticle({
+                title: form.title,
+                content_uri: contentUri,
+                image: { uri: form.image_uri, alt_text: form.image_alt, url: form.image_uri },
+            });
             router.push("/admin/articles");
-        } catch {
-            setError("Failed to create article. Please try again.");
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Failed to create article.");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <FormCard title="New Article" description="Fill in the details below to create a new article." onSubmit={handleSubmit} loading={loading} backHref="/admin/articles" error={error}>
+        <FormCard title="New Article" description="Write your article content below. It will be saved to S3 as a Markdown file." onSubmit={handleSubmit} loading={loading} backHref="/admin/articles" error={error}>
             <FormField label="Title" placeholder="Enter article title" value={form.title} onChange={set("title")} required />
-            <FormField label="Content URI" placeholder="e.g. articles/my-article.md" value={form.content_uri} onChange={set("content_uri")} hint="S3 key or path to the markdown content file." required />
-            <FormField label="Image URI" placeholder="e.g. images/article-cover.png" value={form.image_uri} onChange={set("image_uri")} hint="S3 key or URL for the cover image." required />
+            <MarkdownEditor value={content} onChange={setContent} label="Article Content" placeholder={"# My Article\n\nStart writing your article here..."} hint="This will be saved as a .md file in S3." />
+            <FormField label="Cover Image URI" placeholder="e.g. images/article-cover.png" value={form.image_uri} onChange={set("image_uri")} hint="S3 key or URL for the cover image." required />
             <FormField label="Image Alt Text" placeholder="Describe the image" value={form.image_alt} onChange={set("image_alt")} />
         </FormCard>
     );
