@@ -62,12 +62,58 @@ class ProjectModel(BaseModel):
         return get_media_url(self.content_uri)
 
 
-class ServiceModel(BaseModel):
+class ServiceCreateModel(BaseModel):
     name: str
     description: str
 
+    @computed_field
+    @property
+    def id(self) -> str:
+        return self.name.lower().replace(" ", "-")
 
-class ClientReviewModel(BaseModel):
+    @computed_field
+    @property
+    def created_at(self) -> str:
+        return datetime.now().isoformat()
+
+    @computed_field
+    @property
+    def updated_at(self) -> str:
+        return datetime.now().isoformat()
+
+
+class ServiceModel(BaseModel):
+    id: str
+    name: str
+    description: str
+    created_at: str
+    updated_at: str
+
+
+class ReviewCreateModel(BaseModel):
+    client_name: str
+    client_title: str
+    message: str
+    client_image: ImageModel
+    company_image: ImageModel
+
+    @computed_field
+    @property
+    def id(self) -> str:
+        return self.client_name.lower().replace(" ", "-")
+
+    @computed_field
+    @property
+    def created_at(self) -> str:
+        return datetime.now().isoformat()
+
+    @computed_field
+    @property
+    def updated_at(self) -> str:
+        return datetime.now().isoformat()
+
+
+class ReviewModel(BaseModel):
     id: str
     client_name: str
     client_title: str
@@ -92,9 +138,56 @@ class ArticleModel(BaseModel):
         return get_media_url(self.content_uri)
 
 
-class ContactMessageModel(BaseModel):
+class ArticleCreateModel(BaseModel):
+    title: str
+    content_uri: str
+    image: ImageModel
+
+    @computed_field
+    @property
+    def id(self) -> str:
+        return self.title.lower().replace(" ", "-")
+
+    @computed_field
+    @property
+    def created_at(self) -> str:
+        return datetime.now().isoformat()
+
+    @computed_field
+    @property
+    def updated_at(self) -> str:
+        return datetime.now().isoformat()
+
+
+class ContactMessageCreateModel(BaseModel):
     name: str
     email: str
     phone_no: str | None
     subject: str
     message: str
+
+    @computed_field
+    @property
+    def id(self) -> str:
+        return self.name.lower().replace(" ", "-")
+
+    @computed_field
+    @property
+    def created_at(self) -> str:
+        return datetime.now().isoformat()
+
+    @computed_field
+    @property
+    def updated_at(self) -> str:
+        return datetime.now().isoformat()
+
+
+class ContactMessageModel(BaseModel):
+    id: str
+    name: str
+    email: str
+    phone_no: str | None
+    subject: str
+    message: str
+    created_at: str
+    updated_at: str

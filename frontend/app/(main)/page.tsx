@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import { ArrowLink, ArrowFilledLink } from "@/components/link";
 import MyClientReview from "./my-clients";

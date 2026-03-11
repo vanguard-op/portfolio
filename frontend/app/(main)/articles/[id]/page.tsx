@@ -1,29 +1,30 @@
-"use client";
-
 import Title, { BigTitle } from '@/components/title'
-import React, { useContext } from 'react'
+// import React, { useContext } from 'react'
 import { GrOverview } from 'react-icons/gr'
 import Link from 'next/link'
 import MdEditorMarkdown from '@/components/md-editor-markdown'
 import Image from 'next/image'
 import { BiCalendar } from 'react-icons/bi'
-import PortfolioRepository from '@/lib/repository/base'
-import { PortfolioRepositoryContext } from '@/lib/context/context'
-import usePromise from '@/lib/hooks/promise'
-import { useSearchParams } from 'next/navigation';
+// import PortfolioRepository from '@/lib/repository/base'
+// import { PortfolioRepositoryContext } from '@/lib/context/context'
+// import usePromise from '@/lib/hooks/promise'
+// import { useSearchParams } from 'next/navigation';
+import PortfolioRepositoryProd from '@/lib/repository/prod';
 
-function Page() {
-    const searchParams = useSearchParams();
-    const portfolioRepo = useContext<PortfolioRepository | null>(PortfolioRepositoryContext);
-        const {
-        data: article,
-        isLoading: articleLoading,
-        error: articleError,
-        } = usePromise(portfolioRepo?.getArticleById, [searchParams.get("title")])
-    // const project = projects.find(project => project.title.toLowerCase().trim().replace(RegExp(" ", "g"), "-") === params.title)
-    if (!article) {
-        return <h1>Article not found</h1>
-    }
+async function Page({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+    // const searchParams = useSearchParams();
+    // const portfolioRepo = useContext<PortfolioRepository | null>(PortfolioRepositoryContext);
+    // const {
+    //     data: article,
+    //     isLoading: articleLoading,
+    //     error: articleError,
+    // } = usePromise(portfolioRepo?.getArticleById, [searchParams.get("title")])
+    // // const project = projects.find(project => project.title.toLowerCase().trim().replace(RegExp(" ", "g"), "-") === params.title)
+    // if (!article) {
+    //     return <h1>Article not found</h1>
+    // }
+    const article = await (new PortfolioRepositoryProd()).getArticleById(id);
     return (
         <main className=''>
             {/* <BigTitle className='sm:whitespace-break-spaces text-lg'></BigTitle> */}
@@ -51,7 +52,7 @@ function Page() {
                 <h3 id='overview' className='headline sm:text-3xl text-xl uppercase leading-tight sm:whitespace-nowrap flex flex-row gap-2 sm:mb-8 mb-4 [font-family:var(--font-anton)]'><Link href="#overview"><GrOverview /></Link>Overview</h3>
                 <p className='sm:text-[24px] text-[18px] font-medium tracking-[-1px] leading-snug'>{article?.overview}</p>
             </section> */}
-            <MdEditorMarkdown source={article?.content} />
+            <MdEditorMarkdown source={article?.content_url} />
         </main>
     )
 }

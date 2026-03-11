@@ -1,18 +1,14 @@
 "use client"
 
-import Image from "next/image"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation } from "swiper/modules";
 import { MdArrowBack, MdArrowForward } from "react-icons/md";
-import Title from "@/components/title";
-import { backendFetch } from "@/lib/fetch";
-import { ArticleProps } from "@/lib/types";
-import { useEffect, useState } from "react";
-import { ArrowFilledLink, ArrowLink } from "@/components/link";
 import { RecentArticleCard } from "@/components/card";
+import z from "zod";
+import { ArticleSchema } from "@/lib/schema/schema";
 
 
-const RecentArticle = ({articles}: {articles: ArticleProps[]}) => {
+const RecentArticle = ({ articles }: { articles: z.infer<typeof ArticleSchema>[] }) => {
     // const [articles, setArticles] = useState<ArticleProps[]>([])
     // useEffect(() => {
     //     try {

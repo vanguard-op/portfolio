@@ -1,8 +1,12 @@
 import {
     ArticleSchema,
+    ArticleCreateSchema,
     ClientReviewSchema,
+    ClientReviewCreateSchema,
     ProjectSchema,
+    ProjectCreateSchema,
     ServiceSchema,
+    ServiceCreateSchema,
     ContactMessageSchema,
 } from "../schema/schema";
 import z from "zod";
@@ -11,132 +15,135 @@ import PortfolioRepository from "./base";
 export default class PortfolioRepositoryMock extends PortfolioRepository {
     private mockProjects: z.infer<typeof ProjectSchema>[] = [
         {
-            id: 1,
+            id: "1",
             title: "E-Commerce Platform",
             overview: "A full-stack e-commerce platform built with Next.js and FastAPI",
-            content: "## Overview\n\nThis project showcases a modern e-commerce solution with features like:\n- Product catalog\n- Shopping cart\n- Payment integration\n- Order management",
+            content_uri: "content-1",
+            content_url: "content-1",
             image: {
                 url: "/images/mobile.png",
                 alt_text: "E-Commerce Platform",
-                id: 1,
+                uri: "/images/mobile.png"
             },
             created_at: "2024-01-15T10:00:00Z",
             updated_at: "2024-01-15T10:00:00Z",
             stacks: [
-                { id: 1, name: "Next.js", description: "React Framework", created_at: "2024-01-01T00:00:00Z", updated_at: "2024-01-01T00:00:00Z" },
-                { id: 2, name: "FastAPI", description: "Python Web Framework", created_at: "2024-01-01T00:00:00Z", updated_at: "2024-01-01T00:00:00Z" },
-                { id: 3, name: "PostgreSQL", description: "Database", created_at: "2024-01-01T00:00:00Z", updated_at: "2024-01-01T00:00:00Z" },
-                { id: 4, name: "Docker", description: "Containerization", created_at: "2024-01-01T00:00:00Z", updated_at: "2024-01-01T00:00:00Z" },
+                { name: "Next.js", description: "React Framework" },
+                { name: "FastAPI", description: "Python Web Framework" },
+                { name: "PostgreSQL", description: "Database" },
+                { name: "Docker", description: "Containerization" },
             ],
         },
         {
-            id: 2,
+            id: "2",
             title: "Task Management System",
             overview: "A collaborative task management application with real-time updates",
-            content: "## Features\n\n- Real-time collaboration\n- Task assignments\n- Progress tracking\n- Team analytics",
+            content_uri: "content-2",
+            content_url: "content-2",
             image: {
                 url: "/images/mobile.png",
                 alt_text: "Task Management System",
-                id: 2,
+                uri: "/images/mobile.png"
             },
             created_at: "2024-02-20T14:30:00Z",
             updated_at: "2024-02-20T14:30:00Z",
             stacks: [
-                { id: 5, name: "React", description: "UI Library", created_at: "2024-01-01T00:00:00Z", updated_at: "2024-01-01T00:00:00Z" },
-                { id: 6, name: "Node.js", description: "JavaScript Runtime", created_at: "2024-01-01T00:00:00Z", updated_at: "2024-01-01T00:00:00Z" },
-                { id: 7, name: "MongoDB", description: "NoSQL Database", created_at: "2024-01-01T00:00:00Z", updated_at: "2024-01-01T00:00:00Z" },
+                { name: "React", description: "UI Library" },
+                { name: "Node.js", description: "JavaScript Runtime" },
+                { name: "MongoDB", description: "NoSQL Database" },
             ],
         },
         {
-            id: 3,
+            id: "3",
             title: "AI Content Generator",
             overview: "An AI-powered content generation tool using GPT models",
-            content: "## Capabilities\n\n- Blog post generation\n- SEO optimization\n- Multiple content formats\n- Language translation",
+            content_uri: "content-3",
+            content_url: "content-3",
             image: {
                 url: "/images/mobile.png",
                 alt_text: "AI Content Generator",
-                id: 3,
+                uri: "/images/mobile.png"
             },
             created_at: "2024-03-10T09:15:00Z",
             updated_at: "2024-03-10T09:15:00Z",
             stacks: [
-                { id: 8, name: "Python", description: "Programming Language", created_at: "2024-01-01T00:00:00Z", updated_at: "2024-01-01T00:00:00Z" },
-                { id: 9, name: "OpenAI", description: "AI API", created_at: "2024-01-01T00:00:00Z", updated_at: "2024-01-01T00:00:00Z" },
-                { id: 10, name: "TypeScript", description: "Typed JavaScript", created_at: "2024-01-01T00:00:00Z", updated_at: "2024-01-01T00:00:00Z" },
+                { name: "Python", description: "Programming Language" },
+                { name: "OpenAI", description: "AI API" },
+                { name: "TypeScript", description: "Typed JavaScript" },
             ],
         },
     ];
 
     private mockReviews: z.infer<typeof ClientReviewSchema>[] = [
         {
-            id: 1,
-            name: "Sarah Johnson",
-            title: "CEO, TechStart Inc",
-            image: {
+            id: "1",
+            client_name: "Sarah Johnson",
+            client_title: "CEO, TechStart Inc",
+            client_image: {
                 url: "/images/mobile.png",
                 alt_text: "Sarah Johnson",
-                id: 1,
+                uri: "/images/mobile.png"
             },
             company_image: {
                 url: "/images/mobile.png",
                 alt_text: "TechStart Inc",
-                id: 1,
+                uri: "/images/mobile.png"
             },
-            content: "Exceptional work! The portfolio website exceeded our expectations. The attention to detail and technical expertise made the entire process seamless.",
+            message: "Exceptional work! The portfolio website exceeded our expectations. The attention to detail and technical expertise made the entire process seamless.",
             created_at: "2024-01-20T12:00:00Z",
             updated_at: "2024-01-20T12:00:00Z",
         },
         {
-            id: 2,
-            name: "Michael Chen",
-            title: "CTO, DevSolutions",
-            image: {
+            id: "2",
+            client_name: "Michael Chen",
+            client_title: "CTO, DevSolutions",
+            client_image: {
                 url: "/images/mobile.png",
                 alt_text: "Michael Chen",
-                id: 2,
+                uri: "/images/mobile.png"
             },
             company_image: {
                 url: "/images/mobile.png",
                 alt_text: "DevSolutions",
-                id: 2,
+                uri: "/images/mobile.png"
             },
-            content: "Outstanding developer who delivers quality code on time. The e-commerce platform they built has been running flawlessly for months.",
+            message: "Outstanding developer who delivers quality code on time. The e-commerce platform they built has been running flawlessly for months.",
             created_at: "2024-02-15T15:30:00Z",
             updated_at: "2024-02-15T15:30:00Z",
         },
         {
-            id: 3,
-            name: "Emily Rodriguez",
-            title: "Product Manager, InnovateCo",
-            image: {
+            id: "3",
+            client_name: "Emily Rodriguez",
+            client_title: "Product Manager, InnovateCo",
+            client_image: {
                 url: "/images/mobile.png",
                 alt_text: "Emily Rodriguez",
-                id: 3,
+                uri: "/images/mobile.png"
             },
             company_image: {
                 url: "/images/mobile.png",
                 alt_text: "InnovateCo",
-                id: 3,
+                uri: "/images/mobile.png"
             },
-            content: "Great communication skills and technical prowess. They turned our complex requirements into an elegant solution.",
+            message: "Great communication skills and technical prowess. They turned our complex requirements into an elegant solution.",
             created_at: "2024-03-05T10:45:00Z",
             updated_at: "2024-03-05T10:45:00Z",
         },
         {
-            id: 4,
-            name: "David Thompson",
-            title: "Founder, StartupHub",
-            image: {
+            id: "4",
+            client_name: "David Thompson",
+            client_title: "Founder, StartupHub",
+            client_image: {
                 url: "/images/mobile.png",
                 alt_text: "David Thompson",
-                id: 4,
+                uri: "/images/mobile.png"
             },
             company_image: {
                 url: "/images/mobile.png",
                 alt_text: "StartupHub",
-                id: 4,
+                uri: "/images/mobile.png"
             },
-            content: "Highly recommended! Professional, efficient, and always willing to go the extra mile. Our project was completed ahead of schedule.",
+            message: "Highly recommended! Professional, efficient, and always willing to go the extra mile. Our project was completed ahead of schedule.",
             created_at: "2024-03-25T14:20:00Z",
             updated_at: "2024-03-25T14:20:00Z",
         },
@@ -144,37 +151,40 @@ export default class PortfolioRepositoryMock extends PortfolioRepository {
 
     private mockArticles: z.infer<typeof ArticleSchema>[] = [
         {
-            id: 1,
+            id: "1",
             title: "Building Scalable Web Applications with Next.js",
-            content: "# Building Scalable Web Applications with Next.js\n\n## Introduction\n\nNext.js has become the go-to framework for building modern web applications...\n\n## Key Concepts\n\n### Server Components\n\nServer components allow you to render components on the server...\n\n### App Router\n\nThe new app router provides improved routing capabilities...",
+            content_uri: "content-1",
+            content_url: "content-1",
             image: {
                 url: "/images/mobile.png",
                 alt_text: "Building Scalable Web Applications with Next.js",
-                id: 1,
+                uri: "/images/mobile.png"
             },
             created_at: "2024-01-10T08:00:00Z",
             updated_at: "2024-01-10T08:00:00Z",
         },
         {
-            id: 2,
+            id: "2",
             title: "FastAPI: Building High-Performance APIs",
-            content: "# FastAPI: Building High-Performance APIs\n\n## Why FastAPI?\n\nFastAPI is a modern, fast web framework for building APIs with Python...\n\n## Getting Started\n\nLet's create our first FastAPI application...",
+            content_uri: "content-2",
+            content_url: "content-2",
             image: {
                 url: "/images/mobile.png",
                 alt_text: "FastAPI: Building High-Performance APIs",
-                id: 2,
+                uri: "/images/mobile.png"
             },
             created_at: "2024-02-05T11:30:00Z",
             updated_at: "2024-02-05T11:30:00Z",
         },
         {
-            id: 3,
+            id: "3",
             title: "Docker Best Practices for Development",
-            content: "# Docker Best Practices for Development\n\n## Introduction\n\nDocker has revolutionized how we develop and deploy applications...\n\n## Multi-stage Builds\n\nMulti-stage builds help reduce image size...",
+            content_uri: "content-3",
+            content_url: "content-3",
             image: {
                 url: "/images/mobile.png",
                 alt_text: "Docker Best Practices for Development",
-                id: 3,
+                uri: "/images/mobile.png"
             },
             created_at: "2024-03-01T16:00:00Z",
             updated_at: "2024-03-01T16:00:00Z",
@@ -183,43 +193,41 @@ export default class PortfolioRepositoryMock extends PortfolioRepository {
 
     private mockServices: z.infer<typeof ServiceSchema>[] = [
         {
-            heading: "AI/ML Solutions",
-            content: "I create intelligent systems that solve complex problems using machine learning and AI algorithms. Whether it's predictive modeling or natural language processing, I bring data-driven insights to life with precision and efficiency."
+            name: "AI/ML Solutions",
+            description: "I create intelligent systems that solve complex problems using machine learning and AI algorithms. Whether it's predictive modeling or natural language processing, I bring data-driven insights to life with precision and efficiency."
         },
         {
-            heading: "Full-Stack Development",
-            content: "I build robust, scalable applications from front to back, ensuring seamless integration and optimal performance. My expertise spans both client-side and server-side technologies, allowing me to deliver complete, end-to-end solutions."
+            name: "Full-Stack Development",
+            description: "I build robust, scalable applications from front to back, ensuring seamless integration and optimal performance. My expertise spans both client-side and server-side technologies, allowing me to deliver complete, end-to-end solutions."
         },
         {
-            heading: "Front-End Development",
-            content: "I craft responsive, user-friendly interfaces with modern tools like React, Next.js, and Vue. My focus is on creating engaging, intuitive designs that enhance user experiences and drive interaction."
+            name: "Front-End Development",
+            description: "I craft responsive, user-friendly interfaces with modern tools like React, Next.js, and Vue. My focus is on creating engaging, intuitive designs that enhance user experiences and drive interaction."
         },
         {
-            heading: "Back-End Development",
-            content: "I design and implement efficient back-end systems, ensuring high performance, security, and scalability. Using technologies like Node.js, Django, and Flask, I deliver solid back-end architectures that power seamless applications."
+            name: "Back-End Development",
+            description: "I design and implement efficient back-end systems, ensuring high performance, security, and scalability. Using technologies like Node.js, Django, and Flask, I deliver solid back-end architectures that power seamless applications."
         },
         {
-            heading: "API Development",
-            content: "I specialize in designing and building RESTful APIs and GraphQL services that are fast, scalable, and maintainable. My goal is to ensure your applications can communicate smoothly with external services and data sources, providing a solid interface for users and other systems."
+            name: "API Development",
+            description: "I specialize in designing and building RESTful APIs and GraphQL services that are fast, scalable, and maintainable. My goal is to ensure your applications can communicate smoothly with external services and data sources, providing a solid interface for users and other systems."
         },
         {
-            heading: "Web Optimization",
-            content: "I optimize websites for speed, performance, and SEO. By analyzing and fine-tuning every aspect, I ensure fast load times and improved user engagement, making your website work smarter, not harder."
+            name: "Web Optimization",
+            description: "I optimize websites for speed, performance, and SEO. By analyzing and fine-tuning every aspect, I ensure fast load times and improved user engagement, making your website work smarter, not harder."
         },
         {
-            heading: "Mobile Development",
-            content: "I create powerful mobile applications for both Android and iOS, using tools like React Native and Flutter. I focus on delivering seamless, high-performance mobile experiences that align with your business goals."
+            name: "Mobile Development",
+            description: "I create powerful mobile applications for both Android and iOS, using tools like React Native and Flutter. I focus on delivering seamless, high-performance mobile experiences that align with your business goals."
         },
         {
-            heading: "System Architecture",
-            content: "I design scalable, high-performance architectures that ensure systems are robust, maintainable, and future-proof. From cloud integration to microservices, I create architectures that grow with your business."
+            name: "System Architecture",
+            description: "I design scalable, high-performance architectures that ensure systems are robust, maintainable, and future-proof. From cloud integration to microservices, I create architectures that grow with your business."
         }
     ];
 
     getProjects = async () => {
-        // Simulate network delay
         await new Promise(resolve => setTimeout(resolve, 300));
-        console.log('Fetched mock projects', this.mockProjects);
         return this.mockProjects;
     };
 
@@ -238,37 +246,109 @@ export default class PortfolioRepositoryMock extends PortfolioRepository {
         return this.mockServices;
     };
 
-    getArticleById = async (id: number) => {
+    getArticleById = async (id: string) => {
         await new Promise(resolve => setTimeout(resolve, 100));
-        const article = this.mockArticles.find(a => a.id === id);
-        if (!article) {
-            throw new Error(`Article with id ${id} not found`);
-        }
-        return article;
+        const article = this.mockArticles.find(a => String(a.id) === String(id));
+        if (!article) throw new Error(`Article with id ${id} not found`);
+        return article as z.infer<typeof ArticleSchema>;
     };
 
-    getProjectById = async (id: number) => {
+    createArticle = async (data: z.infer<typeof ArticleCreateSchema>) => {
         await new Promise(resolve => setTimeout(resolve, 100));
-        const project = this.mockProjects.find(p => p.id === id);
-        if (!project) {
-            throw new Error(`Project with id ${id} not found`);
-        }
-        return project;
+        const newArticle: z.infer<typeof ArticleSchema> = { ...data, id: String(Date.now()), content_url: data.content_uri, created_at: new Date().toISOString(), updated_at: new Date().toISOString() };
+        this.mockArticles.push(newArticle);
+        return newArticle;
     };
 
-    getServiceById = async (id: number) => {
+    updateArticle = async (id: string, data: z.infer<typeof ArticleSchema>) => {
         await new Promise(resolve => setTimeout(resolve, 100));
-        // ServiceSchema doesn't have an id field, so we'll use array index
-        const service = this.mockServices[id - 1];
-        if (!service) {
-            throw new Error(`Service with id ${id} not found`);
-        }
+        const index = this.mockArticles.findIndex(a => String(a.id) === String(id));
+        if (index === -1) throw new Error("Not found");
+        this.mockArticles[index] = data;
+        return data;
+    };
+
+    deleteArticle = async (id: string) => {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        this.mockArticles = this.mockArticles.filter(a => String(a.id) !== String(id));
+    };
+
+    getProjectById = async (id: string) => {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        const project = this.mockProjects.find(p => String(p.id) === String(id));
+        if (!project) throw new Error(`Project with id ${id} not found`);
+        return project as z.infer<typeof ProjectSchema>;
+    };
+
+    createProject = async (data: z.infer<typeof ProjectCreateSchema>) => {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        const newProject: z.infer<typeof ProjectSchema> = { ...data, id: String(Date.now()), content_url: data.content_uri, created_at: new Date().toISOString(), updated_at: new Date().toISOString() };
+        this.mockProjects.push(newProject);
+        return newProject;
+    };
+
+    updateProject = async (id: string, data: z.infer<typeof ProjectSchema>) => {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        const index = this.mockProjects.findIndex(p => String(p.id) === String(id));
+        if (index === -1) throw new Error("Not found");
+        this.mockProjects[index] = data;
+        return data;
+    };
+
+    deleteProject = async (id: string) => {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        this.mockProjects = this.mockProjects.filter(p => String(p.id) !== String(id));
+    };
+
+    getServiceById = async (id: string) => {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        const service = this.mockServices[Number(id) - 1];
+        if (!service) throw new Error(`Service with id ${id} not found`);
         return service;
+    };
+
+    createService = async (data: z.infer<typeof ServiceCreateSchema>) => {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        const newService = { ...data };
+        this.mockServices.push(newService);
+        return newService;
+    };
+
+    updateService = async (id: string, data: z.infer<typeof ServiceSchema>) => {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        const index = Number(id) - 1;
+        if (!this.mockServices[index]) throw new Error("Not found");
+        this.mockServices[index] = data;
+        return data;
+    };
+
+    deleteService = async (id: string) => {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        this.mockServices.splice(Number(id) - 1, 1);
+    };
+
+    createReview = async (data: z.infer<typeof ClientReviewCreateSchema>) => {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        const newReview: z.infer<typeof ClientReviewSchema> = { ...data, id: String(Date.now()), created_at: new Date().toISOString(), updated_at: new Date().toISOString() };
+        this.mockReviews.push(newReview);
+        return newReview;
+    };
+
+    updateReview = async (id: string, data: z.infer<typeof ClientReviewSchema>) => {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        const index = this.mockReviews.findIndex(r => String(r.id) === String(id));
+        if (index === -1) throw new Error("Not found");
+        this.mockReviews[index] = data;
+        return data;
+    };
+
+    deleteReview = async (id: string) => {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        this.mockReviews = this.mockReviews.filter(r => String(r.id) !== String(id));
     };
 
     sendContactMessage = async (data: z.infer<typeof ContactMessageSchema>) => {
         await new Promise(resolve => setTimeout(resolve, 300));
         console.log('Mock contact message sent:', data);
-        // In a real scenario, this would send the message to a backend
     };
 }

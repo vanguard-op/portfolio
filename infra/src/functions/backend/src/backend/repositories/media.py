@@ -1,5 +1,5 @@
 from backend.utilities import s3
-from backend.database.models.media import MediaCreateModel
+from backend.database.models.media import MediaCreateModel, MediaModel
 
 
 class MediaRepository:
@@ -10,9 +10,14 @@ class MediaRepository:
         """Create media upload url from s3"""
         return s3.create_media_upload_url(model.directory.value, model.filename)
 
-    def list_media_object(self, directory: str, page_index=0) -> list[str]:
+    def list_media_object(
+        self, directory: str, page_index=0, page_size=10
+    ) -> list[MediaModel]:
         """List media object from s3"""
-        return s3.list_media_object(directory, page_index)
+        return [
+            MediaModel(key=key)
+            for key in s3.list_media_object(directory, page_index, page_size)
+        ]
 
     def get_media_url(self, key: str) -> str:
         """Get media url from s3"""

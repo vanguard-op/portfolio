@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
 import { Anton, Geist, Geist_Mono, Manrope, Smooch_Sans } from "next/font/google";
 import "swiper/css";
-import "./globals.css";
-import MainHeader from "@/components/header";
-import MainFooter from "@/components/footer";
-import ScrollAnimation from "@/components/scroll-animation";
-import { OverlayNav } from "@/components/overlay";
-import { ContextProvider } from "./provider";
+import "@/app/globals.css";
+import { ContextProvider } from "@/app/provider";
+import AdminLayout from "@/components/admin-layout";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -26,7 +23,7 @@ const roboto = Smooch_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Ahmad Khidir",
+  title: "Ahmad Khidir - Admin",
   description: "Welcome to Ahmad Khidir's Portfolio! A Software Engineer passionate about building scalable, efficient solutions that spark innovation and deliver real impact.",
   keywords: ["Ahmad Khidir", "Full Stack Developer", "Software Engineer", "AI/ML", "Mobile Developer", "React", "Next.js", "TypeScript", "FastAPI", "Django", "Node.js"],
   authors: [{ name: "Ahmad Khidir" }],
@@ -48,15 +45,11 @@ export default function RootLayout({
       <body
         className={`${manrope.className} ${manrope.variable} ${anton.variable} ${roboto.variable} antialiased *:overflow-x-hidden`}
       >
-        <div
-          className="absolute -z-10 sm:w-[600px] w-[300px] sm:h-[600px] h-[300px] sm:left-[calc(50%-300px)] left-[calc(50%-150px)] -translate-y-1/3 bg-[radial-gradient(circle,#2563eb33,transparent_70%)] rounded-full" />
-          <ContextProvider>
-            <MainHeader />
+        <ContextProvider>
+          <AdminLayout>
             {children}
-            <MainFooter />
-            <OverlayNav />
-            {/* <ScrollAnimation /> */}
-          </ContextProvider>
+          </AdminLayout>
+        </ContextProvider>
       </body>
     </html>
   );

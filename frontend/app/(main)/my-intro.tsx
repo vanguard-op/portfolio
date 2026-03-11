@@ -1,3 +1,5 @@
+"use client"
+
 import { ArrowFilledLink, ArrowLink } from "@/components/link";
 import Title, { BigTitle } from "@/components/title";
 import Image from "next/image";
@@ -49,27 +51,27 @@ export function MyIntro() {
                     duration: .5
                 },
             );
-    gsap.fromTo(actionRef.current,
-        {
-            y: 25,
-            opacity: 0,
-        },
-        {
-            y: 0,
-            opacity: 1,
-            duration: .5,
-            scrollTrigger: {
-                trigger: actionRef.current,
-                start: "top 95%",
-                end: "bottom top",
-                toggleActions: "play none none reverse",
-                // scrub: true
+        gsap.fromTo(actionRef.current,
+            {
+                y: 25,
+                opacity: 0,
             },
-        },
-    );
+            {
+                y: 0,
+                opacity: 1,
+                duration: .5,
+                scrollTrigger: {
+                    trigger: actionRef.current,
+                    start: "top 95%",
+                    end: "bottom top",
+                    toggleActions: "play none none reverse",
+                    // scrub: true
+                },
+            },
+        );
     }, []);
 
-    
+
     return (
         <section>
             <BigTitle ref={intro1Ref}>Ahmad Khidir<br />Software Engineer</BigTitle>

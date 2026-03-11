@@ -16,11 +16,11 @@ import usePromise from '@/lib/hooks/promise'
 function Page() {
     const searchParams = useSearchParams();
     const portfolioRepo = useContext<PortfolioRepository | null>(PortfolioRepositoryContext);
-        const {
+    const {
         data: project,
         isLoading: projectLoading,
         error: projectError,
-        } = usePromise(portfolioRepo?.getProjectById, [searchParams.get("title")])
+    } = usePromise(portfolioRepo?.getProjectById, [searchParams.get("title")])
     // const project = projects.find(project => project.title.toLowerCase().trim().replace(RegExp(" ", "g"), "-") === params.title)
     if (!project) {
         return <h1>Project not found</h1>
@@ -50,7 +50,7 @@ function Page() {
                 <h3 id='overview' className='headline sm:text-3xl text-xl uppercase leading-tight sm:whitespace-nowrap flex flex-row gap-2 sm:mb-8 mb-4 [font-family:var(--font-anton)]'><Link href="#overview"><GrOverview /></Link>Overview</h3>
                 <p className='sm:text-[24px] text-[18px] font-medium tracking-[-1px] leading-snug'>{project?.overview}</p>
             </section>
-            <MdEditorMarkdown source={project?.content} />
+            <MdEditorMarkdown source={project?.content_url} />
         </main>
     )
 }

@@ -1,7 +1,9 @@
 from fastapi import APIRouter
-from .projects import router as projects_router
-from .media import router as media_router
+from . import articles, projects, reviews, services, media
 
 router = APIRouter()
-router.include_router(projects_router, prefix="/projects")
-router.include_router(media_router, prefix="/media")
+router.include_router(projects.router, prefix="/projects")
+router.include_router(media.router, prefix="/media")
+router.include_router(reviews.router, prefix="/reviews")
+router.include_router(services.router, prefix="/services")
+router.include_router(articles.router, prefix="/articles")

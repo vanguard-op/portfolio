@@ -1,7 +1,11 @@
 from fastapi import APIRouter, Query
 from fastapi.responses import RedirectResponse
 from backend.repositories.media import MediaRepository
-from backend.database.models.media import MediaCreateModel, MediaDirectoriesEnum
+from backend.database.models.media import (
+    MediaCreateModel,
+    MediaDirectoriesEnum,
+    MediaModel,
+)
 
 router = APIRouter(tags=["media"])
 
@@ -21,9 +25,10 @@ def list_media_object(
         description="Directory to list media objects from",
     ),
     page_index: int = Query(0, description="Page index"),
-) -> list[str]:
+    page_size: int = Query(10, description="Page size"),
+) -> list[MediaModel]:
     """List media object from s3"""
-    return repository.list_media_object(directory, page_index)
+    return repository.list_media_object(directory, page_index, page_size)
 
 
 @router.get("/{key:path}")

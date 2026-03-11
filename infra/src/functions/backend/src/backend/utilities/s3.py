@@ -16,7 +16,7 @@ def get_s3_object_url(params: PresignParams) -> str:
     return s3_client.generate_presigned_url(
         "get_object",
         Params={"Bucket": params["bucket"], "Key": params["key"]},
-        ExpiresIn=params.get("expires_in", 3600),
+        ExpiresIn=params.get("expires_in") or 3600,
     )
 
 
@@ -41,10 +41,10 @@ def create_media_upload_url(directory: str, filename: str) -> str:
     )
 
 
-def list_s3_object(bucket: str, key: str, page_index=0) -> list[str]:
+def list_s3_object(bucket: str, key: str, page_index=0, page_size=10) -> list[str]:
     paginator = s3_client.get_paginator("list_objects_v2")
     pages = paginator.paginate(
-        Bucket=bucket, Prefix=key, PaginationConfig={"PageSize": 100}
+        Bucket=bucket, Prefix=key, PaginationConfig={"PageSize": page_size}
     )
     pages = list(pages)
     if page_index >= len(pages):
@@ -59,5 +59,5 @@ def list_s3_object(bucket: str, key: str, page_index=0) -> list[str]:
     ]
 
 
-def list_media_object(directory: str, page_index=0) -> list[str]:
-    return list_s3_object(os.getenv("MEDIA_BUCKET"), directory, page_index)
+def list_media_object(directory: str, page_index=0, page_size=10) -> list[str]:
+    return list_s3_object(os.getenv("MEDIA_BUCKET"), directory, page_index, page_size)
