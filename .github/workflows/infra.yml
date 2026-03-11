@@ -1,7 +1,7 @@
 name: Infrastructure Deploy
 on:
   push:
-    branches: [main]
+    branches: [main, "refactoring"]
     paths:
       - "infra/**"
 

@@ -1,8 +1,0 @@
-{
-  // "python.analysis.extraPaths": [
-  //   "./infra/src/functions/backend/src",
-  //   "./packages/backend/src",
-  //   "./packages/internal/src"
-  // ],
-  // "python.analysis.autoImportCompletions": true
-}
