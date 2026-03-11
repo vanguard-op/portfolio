@@ -26,7 +26,7 @@ app.include_router(
 )
 
 # Session middleware for OAuth2
-app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
+app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY or "")
 
 
 @app.get("/")
