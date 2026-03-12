@@ -1,5 +1,8 @@
 from backend.utilities import s3
 from backend.database.models.media import MediaCreateModel, MediaModel, MediaUploadModel
+from aws_lambda_powertools.logging import Logger
+
+logger = Logger()
 
 
 class MediaRepository:
@@ -25,5 +28,6 @@ class MediaRepository:
     def get_media_url(self, key: str) -> str:
         """Get media url from s3"""
         url = s3.get_media_url(key)
-        print("media url: ", url)
+        logger.info(f"media key: {key}")
+        logger.info(f"media url: {url}")
         return url
