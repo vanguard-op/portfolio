@@ -5,6 +5,7 @@ from backend.database.models.media import (
     MediaCreateModel,
     MediaDirectoriesEnum,
     MediaModel,
+    MediaUploadModel,
 )
 
 router = APIRouter(tags=["media"])
@@ -13,7 +14,7 @@ repository = MediaRepository()
 
 
 @router.post("/upload-url", tags=["admin"])
-def create_media_upload_url(media: MediaCreateModel) -> str:
+def create_media_upload_url(media: MediaCreateModel) -> MediaUploadModel:
     """Create media upload url from s3"""
     return repository.create_media_upload_url(media)
 

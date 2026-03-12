@@ -2,7 +2,7 @@ import Title, { BigTitle } from '@/components/title'
 // import React, { useContext } from 'react'
 import { GrOverview } from 'react-icons/gr'
 import Link from 'next/link'
-import MdEditorMarkdown from '@/components/md-editor-markdown'
+import MarkdownViewer from '@/components/markdown-viewer'
 import Image from 'next/image'
 import { BiCalendar } from 'react-icons/bi'
 // import PortfolioRepository from '@/lib/repository/base'
@@ -52,7 +52,7 @@ async function Page({ params }: { params: Promise<{ id: string }> }) {
                 <h3 id='overview' className='headline sm:text-3xl text-xl uppercase leading-tight sm:whitespace-nowrap flex flex-row gap-2 sm:mb-8 mb-4 [font-family:var(--font-anton)]'><Link href="#overview"><GrOverview /></Link>Overview</h3>
                 <p className='sm:text-[24px] text-[18px] font-medium tracking-[-1px] leading-snug'>{article?.overview}</p>
             </section> */}
-            <MdEditorMarkdown source={article?.content_url} />
+            <MarkdownViewer url={article?.content_url} className='px-4' />
         </main>
     )
 }

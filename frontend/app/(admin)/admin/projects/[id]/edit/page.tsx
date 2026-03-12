@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useRepository } from "@/lib/hooks/use-repository";
-import { uploadMarkdown, fetchMarkdownContent } from "@/lib/hooks/use-markdown-editor";
+import { uploadMarkdown } from "@/lib/hooks/use-markdown-editor";
 import { FormCard, FormField, FormTextarea } from "@/components/admin-form";
 import { MarkdownEditor } from "@/components/markdown-editor";
 import { ImagePicker } from "@/components/image-picker";
@@ -23,7 +23,7 @@ export default function EditProjectPage() {
         repo.getProjectById(id).then(async (p) => {
             setForm({ title: p.title, overview: p.overview, content_uri: p.content_uri, image_uri: p.image.uri, image_alt: p.image.alt_text, stacks: (p.stacks ?? []).map(s => s.name).join(", ") });
             if (p.content_url) {
-                const md = await fetchMarkdownContent(p.content_url);
+                const md = await repo.fetchMarkdown(p.content_url);
                 setContent(md);
             }
         }).catch(() => setError("Failed to load project.")).finally(() => setFetching(false));
@@ -36,7 +36,7 @@ export default function EditProjectPage() {
         try {
             setLoading(true);
             setError(null);
-            const contentUri = await uploadMarkdown("projects", form.title, content);
+            const contentUri = await repo.uploadMarkdown("projects", form.title, content);
             const existing = await repo.getProjectById(id);
             const stacks = form.stacks.split(",").map(s => s.trim()).filter(Boolean).map(name => ({ name, description: "" }));
             await repo.updateProject(id, {

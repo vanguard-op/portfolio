@@ -102,7 +102,7 @@ export const ProjectCard: React.FC<{ project: z.infer<typeof ProjectSchema>, ind
 export const RecentArticleCard = (props: z.infer<typeof ArticleSchema>) => {
     return (
         <article className="w-full h-[500px] flex flex-col sm:flex-row dark:bg-[#15131a] bg-slate-200 overflow-hidden">
-            <div className={`flex-1 overflow-hidden`}>
+            <div className={`flex-1 overflow-hidden bg-slate-400 dark:bg-[#201d28]`}>
                 <Image
                     src={props.image.url}
                     alt={props.image.alt_text}
@@ -113,8 +113,8 @@ export const RecentArticleCard = (props: z.infer<typeof ArticleSchema>) => {
             </div>
             <div className={`flex-1 flex flex-col overflow-y-auto [-ms-overflow-style:none] [scrollbar-width:none] sm:px-10 px-4 sm:py-16 py-4`}>
                 <p className='mb-2 flex flex-row items-center gap-2'><BiCalendar size={24} /> {props?.updated_at.split("T").at(0)}</p>
-                <h2 className={`mb-3 sm:mb-6 uppercase text-lg sm:text-[38px] tracking-[-1px] font-bold leading-tight`}>{props.title}</h2>
-                <p className={`font-light text-base leading-tight flex-1 mb-4 sm:mb-9`}>{props.content_url}</p>
+                <h2 className={`flex-1 mb-3 sm:mb-6 uppercase text-lg sm:text-[38px] tracking-[-1px] font-bold leading-tight`}>{props.title}</h2>
+                {/* <p className={`font-light text-base leading-tight flex-1 mb-4 sm:mb-9`}>{props.content_url}</p> */}
                 <div className="z-10 relative">
                     <ArrowFilledLink href={`/articles/${props.id}`}>View Details</ArrowFilledLink>
                 </div>
@@ -126,7 +126,7 @@ export const RecentArticleCard = (props: z.infer<typeof ArticleSchema>) => {
 export const ArticleCard = (props: z.infer<typeof ArticleSchema>) => {
     return (
         <article className="w-full flex flex-col dark:bg-[#15131a] bg-slate-200 overflow-hidden">
-            <div className={`flex-1 overflow-hidden`}>
+            <div className={`flex-1 overflow-hidden bg-slate-400 dark:bg-[#201d28]`}>
                 <Image
                     src={props.image.url}
                     alt={props.image.alt_text}
@@ -137,8 +137,8 @@ export const ArticleCard = (props: z.infer<typeof ArticleSchema>) => {
             </div>
             <div className={`flex-1 flex flex-col overflow-y-auto [-ms-overflow-style:none] [scrollbar-width:none] sm:px-10 px-4 sm:py-16 py-4`}>
                 <p className='mb-2 flex flex-row items-center gap-2'><BiCalendar size={24} /> {props?.updated_at.split("T").at(0)}</p>
-                <h2 className={`mb-3 sm:mb-6 uppercase text-lg sm:text-[38px] tracking-[-1px] font-bold leading-tight`}>{props.title}</h2>
-                <p className={`font-light text-base leading-tight flex-1 mb-4 sm:mb-9`}>{props.content_url}</p>
+                <h2 className={`flex-1 mb-3 sm:mb-6 uppercase text-lg sm:text-[38px] tracking-[-1px] font-bold leading-tight`}>{props.title}</h2>
+                {/* <p className={`font-light text-base leading-tight flex-1 mb-4 sm:mb-9`}>{props.content_url}</p> */}
                 <div className="z-10 relative">
                     <ArrowFilledLink href={`/articles/${props.id}`}>View Details</ArrowFilledLink>
                 </div>

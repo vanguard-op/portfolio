@@ -1,14 +1,17 @@
 from backend.utilities import s3
-from backend.database.models.media import MediaCreateModel, MediaModel
+from backend.database.models.media import MediaCreateModel, MediaModel, MediaUploadModel
 
 
 class MediaRepository:
     def __init__(self):
         pass
 
-    def create_media_upload_url(self, model: MediaCreateModel) -> str:
+    def create_media_upload_url(self, model: MediaCreateModel) -> MediaUploadModel:
         """Create media upload url from s3"""
-        return s3.create_media_upload_url(model.directory.value, model.filename, model.content_type)
+        url, key = s3.create_media_upload_url(
+            model.directory.value, model.filename, model.content_type
+        )
+        return MediaUploadModel(url=url, key=key)
 
     def list_media_object(
         self, directory: str, page_index=0, page_size=10

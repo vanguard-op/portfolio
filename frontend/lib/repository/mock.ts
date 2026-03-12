@@ -236,6 +236,13 @@ export default class PortfolioRepositoryMock extends PortfolioRepository {
         return this.mockReviews;
     };
 
+    getReviewById = async (id: string) => {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        const review = this.mockReviews.find(r => String(r.id) === String(id));
+        if (!review) throw new Error(`Review with id ${id} not found`);
+        return review as z.infer<typeof ClientReviewSchema>;
+    };
+
     getArticles = async () => {
         await new Promise(resolve => setTimeout(resolve, 250));
         return this.mockArticles;
@@ -260,12 +267,12 @@ export default class PortfolioRepositoryMock extends PortfolioRepository {
         return newArticle;
     };
 
-    updateArticle = async (id: string, data: z.infer<typeof ArticleSchema>) => {
+    updateArticle = async (id: string, data: Partial<z.infer<typeof ArticleSchema>>) => {
         await new Promise(resolve => setTimeout(resolve, 100));
         const index = this.mockArticles.findIndex(a => String(a.id) === String(id));
         if (index === -1) throw new Error("Not found");
-        this.mockArticles[index] = data;
-        return data;
+        this.mockArticles[index] = { ...this.mockArticles[index], ...data };
+        return this.mockArticles[index];
     };
 
     deleteArticle = async (id: string) => {
@@ -287,12 +294,12 @@ export default class PortfolioRepositoryMock extends PortfolioRepository {
         return newProject;
     };
 
-    updateProject = async (id: string, data: z.infer<typeof ProjectSchema>) => {
+    updateProject = async (id: string, data: Partial<z.infer<typeof ProjectSchema>>) => {
         await new Promise(resolve => setTimeout(resolve, 100));
         const index = this.mockProjects.findIndex(p => String(p.id) === String(id));
         if (index === -1) throw new Error("Not found");
-        this.mockProjects[index] = data;
-        return data;
+        this.mockProjects[index] = { ...this.mockProjects[index], ...data };
+        return this.mockProjects[index];
     };
 
     deleteProject = async (id: string) => {
@@ -309,17 +316,17 @@ export default class PortfolioRepositoryMock extends PortfolioRepository {
 
     createService = async (data: z.infer<typeof ServiceCreateSchema>) => {
         await new Promise(resolve => setTimeout(resolve, 100));
-        const newService = { ...data };
+        const newService: z.infer<typeof ServiceSchema> = { ...data, id: String(Date.now()), created_at: new Date().toISOString(), updated_at: new Date().toISOString() };
         this.mockServices.push(newService);
         return newService;
     };
 
-    updateService = async (id: string, data: z.infer<typeof ServiceSchema>) => {
+    updateService = async (id: string, data: Partial<z.infer<typeof ServiceSchema>>) => {
         await new Promise(resolve => setTimeout(resolve, 100));
         const index = Number(id) - 1;
         if (!this.mockServices[index]) throw new Error("Not found");
-        this.mockServices[index] = data;
-        return data;
+        this.mockServices[index] = { ...this.mockServices[index], ...data };
+        return this.mockServices[index];
     };
 
     deleteService = async (id: string) => {
@@ -334,12 +341,12 @@ export default class PortfolioRepositoryMock extends PortfolioRepository {
         return newReview;
     };
 
-    updateReview = async (id: string, data: z.infer<typeof ClientReviewSchema>) => {
+    updateReview = async (id: string, data: Partial<z.infer<typeof ClientReviewSchema>>) => {
         await new Promise(resolve => setTimeout(resolve, 100));
         const index = this.mockReviews.findIndex(r => String(r.id) === String(id));
         if (index === -1) throw new Error("Not found");
-        this.mockReviews[index] = data;
-        return data;
+        this.mockReviews[index] = { ...this.mockReviews[index], ...data };
+        return this.mockReviews[index];
     };
 
     deleteReview = async (id: string) => {
@@ -350,5 +357,42 @@ export default class PortfolioRepositoryMock extends PortfolioRepository {
     sendContactMessage = async (data: z.infer<typeof ContactMessageSchema>) => {
         await new Promise(resolve => setTimeout(resolve, 300));
         console.log('Mock contact message sent:', data);
+    };
+
+    getMediaUploadUrl = async (directory: string, filename: string, contentType?: string) => {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        return {
+            url: `https://mock-s3-presigned-url.com/${directory}/${filename}?contentType=${contentType}`,
+            key: `${directory}/${filename}`
+        };
+    };
+
+    listMedia = async (directory: string, pageSize: number = 50) => {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        return [
+            { key: `${directory}/mock1.jpg`, url: "/images/mobile.png" },
+            { key: `${directory}/mock2.jpg`, url: "/images/mobile.png" },
+        ];
+    };
+
+    uploadToS3 = async (url: string, body: Blob | string | File, contentType?: string) => {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        console.log(`Mock S3 upload to ${url} with content type ${contentType}`);
+    };
+
+    fetchMarkdown = async (url: string) => {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        return "# Mock Markdown Content\n\nThis is fetched from a mock repository.";
+    };
+
+    getMediaUrl = (key: string) => {
+        return "/images/mobile.png";
+    };
+
+    uploadMarkdown = async (directory: string, filename: string, content: string): Promise<string> => {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        const safeFilename = `${filename.replace(/[^a-zA-Z0-9_-]/g, "_")}.md`;
+        console.log(`Mock S3 upload for ${directory}/${safeFilename}`);
+        return `${directory}/${safeFilename}`;
     };
 }

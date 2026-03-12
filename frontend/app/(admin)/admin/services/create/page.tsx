@@ -12,17 +12,18 @@ export default function CreateServicePage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [form, setForm] = useState({ name: "" });
-    const [content, setContent] = useState("");
+    const [form, setForm] = useState({ name: "", description: "" });
+
+    const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => setForm(f => ({ ...f, [k]: e.target.value }));
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!form.name || !content) { setError("Service name and content are required."); return; }
+        if (!form.name || !form.description) { setError("Service name and description are required."); return; }
         try {
             setLoading(true);
             setError(null);
-            const contentUri = await uploadMarkdown("services", form.name, content);
-            await repo.createService({ name: form.name, description: contentUri });
+            // const contentUri = await repo.uploadMarkdown("services", form.name, form.description);
+            await repo.createService({ name: form.name, description: form.description });
             router.push("/admin/services");
         } catch (err) {
             setError(err instanceof Error ? err.message : "Failed to create service.");
@@ -33,8 +34,8 @@ export default function CreateServicePage() {
 
     return (
         <FormCard title="New Service" description="Add a new service. The content will be saved as a Markdown file." onSubmit={handleSubmit} loading={loading} backHref="/admin/services" error={error}>
-            <FormField label="Service Name" placeholder="e.g. Full-Stack Development" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required />
-            <MarkdownEditor value={content} onChange={setContent} label="Service Description (Markdown)" placeholder={"## Full-Stack Development\n\nDescribe this service..."} hint="This will be saved as a .md file in S3." />
+            <FormField label="Service Name" placeholder="e.g. Full-Stack Development" value={form.name} onChange={set("name")} required />
+            <FormField label="Service Description" placeholder="Write the service description here..." value={form.description} onChange={set("description")} required />
         </FormCard>
     );
 }

@@ -85,7 +85,7 @@ export default function ServicesAdminPage() {
                                     <p className="text-sm text-neutral-400 mt-2 line-clamp-3">{service.description}</p>
                                 </div>
                                 <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <Link href={`/admin/services/${index + 1}/edit`} className="p-2 rounded-lg text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"><FiEdit2 size={15} /></Link>
+                                    <Link href={`/admin/services/${service.id}/edit`} className="p-2 rounded-lg text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"><FiEdit2 size={15} /></Link>
                                     <button onClick={() => handleDelete(index)} disabled={deletingIndex === index}
                                         className={`p-2 rounded-lg transition-colors ${confirmDelete === index ? "text-white bg-red-600 hover:bg-red-500" : "text-neutral-400 hover:text-red-400 hover:bg-red-500/10"}`}>
                                         {deletingIndex === index ? <FiLoader size={15} className="animate-spin" /> : <FiTrash2 size={15} />}

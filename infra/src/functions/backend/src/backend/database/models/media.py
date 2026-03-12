@@ -22,3 +22,8 @@ class MediaModel(BaseModel):
     @property
     def url(self) -> str:
         return get_media_url(self.key)
+
+
+class MediaUploadModel(BaseModel):
+    url: str
+    key: str

@@ -33,8 +33,11 @@ export const ProjectCreateSchema = z.object({
 });
 
 export const ServiceSchema = z.object({
+    id: z.string(),
     name: z.string(),
     description: z.string(),
+    created_at: z.string(),
+    updated_at: z.string(),
 });
 
 export const ServiceCreateSchema = z.object({

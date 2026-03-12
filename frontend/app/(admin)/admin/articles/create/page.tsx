@@ -24,7 +24,7 @@ export default function CreateArticlePage() {
         try {
             setLoading(true);
             setError(null);
-            const contentUri = await uploadMarkdown("articles", form.title, content);
+            const contentUri = await repo.uploadMarkdown("articles", form.title, content);
             await repo.createArticle({
                 title: form.title,
                 content_uri: contentUri,

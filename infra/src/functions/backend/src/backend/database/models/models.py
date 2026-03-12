@@ -1,5 +1,6 @@
 from pydantic import BaseModel, computed_field
 from backend.utilities.s3 import get_media_url
+from backend.utilities.parser import make_id
 from datetime import datetime
 
 
@@ -33,7 +34,7 @@ class ProjectCreateModel(BaseModel):
     @computed_field
     @property
     def id(self) -> str:
-        return self.title.lower().replace(" ", "-")
+        return make_id(self.title)
 
     @computed_field
     @property
@@ -69,7 +70,7 @@ class ServiceCreateModel(BaseModel):
     @computed_field
     @property
     def id(self) -> str:
-        return self.name.lower().replace(" ", "-")
+        return make_id(self.name)
 
     @computed_field
     @property
@@ -100,7 +101,7 @@ class ReviewCreateModel(BaseModel):
     @computed_field
     @property
     def id(self) -> str:
-        return self.client_name.lower().replace(" ", "-")
+        return make_id(f"{self.client_name} {self.client_title}")
 
     @computed_field
     @property
@@ -146,7 +147,7 @@ class ArticleCreateModel(BaseModel):
     @computed_field
     @property
     def id(self) -> str:
-        return self.title.lower().replace(" ", "-")
+        return make_id(self.title)
 
     @computed_field
     @property
@@ -169,7 +170,7 @@ class ContactMessageCreateModel(BaseModel):
     @computed_field
     @property
     def id(self) -> str:
-        return self.name.lower().replace(" ", "-")
+        return make_id(self.name)
 
     @computed_field
     @property

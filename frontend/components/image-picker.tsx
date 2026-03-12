@@ -2,8 +2,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { FiUpload, FiChevronDown, FiSearch, FiX, FiImage, FiLoader, FiCheck } from "react-icons/fi";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
+import { useRepository } from "../lib/hooks/use-repository";
 
 interface ImageItem {
     key: string;
@@ -22,6 +21,7 @@ interface ImagePickerProps {
 }
 
 export function ImagePicker({ label = "Image", value, onChange, hint, directory = "images" }: ImagePickerProps) {
+    const repo = useRepository();
     const [images, setImages] = useState<ImageItem[]>([]);
     const [hasLoaded, setHasLoaded] = useState(false);
     const [loadingList, setLoadingList] = useState(false);
@@ -40,8 +40,8 @@ export function ImagePicker({ label = "Image", value, onChange, hint, directory 
         // If it already looks like a URL, use directly
         if (value.startsWith("http")) { setPreviewUrl(value); return; }
         // Otherwise resolve via backend media redirect
-        setPreviewUrl(`${API_BASE}/v1/media/${value}`);
-    }, [value]);
+        setPreviewUrl(repo.getMediaUrl(value));
+    }, [value, repo]);
 
     // Reset when directory changes
     useEffect(() => {
@@ -53,9 +53,7 @@ export function ImagePicker({ label = "Image", value, onChange, hint, directory 
         if (hasLoaded || loadingList) return; 
         setLoadingList(true);
         try {
-            const res = await fetch(`${API_BASE}/v1/media/list?directory=${directory}&page_size=50`);
-            if (!res.ok) throw new Error();
-            const data: { key: string; url: string }[] = await res.json();
+            const data = await repo.listMedia(directory, 50);
             setImages(prev => {
                 // Merge server results with local state, avoiding duplicates
                 const localKeys = new Set(prev.map(i => i.key));
@@ -68,7 +66,7 @@ export function ImagePicker({ label = "Image", value, onChange, hint, directory 
         } finally {
             setLoadingList(false);
         }
-    }, [directory, hasLoaded, loadingList]);
+    }, [directory, hasLoaded, loadingList, repo]);
 
     const handleOpen = () => {
         setOpen(true);
@@ -104,26 +102,11 @@ export function ImagePicker({ label = "Image", value, onChange, hint, directory 
         setUploading(true);
         setUploadError(null);
         try {
-            // 1. Get presigned upload URL
-            const urlRes = await fetch(`${API_BASE}/v1/media/upload-url`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ 
-                    directory, 
-                    filename: file.name,
-                    content_type: file.type 
-                }),
-            });
-            if (!urlRes.ok) throw new Error("Failed to get upload URL");
-            const presignedUrl: string = await urlRes.json();
+            // 1. Get presigned upload URL via repository
+            const presignedUrl = await repo.getMediaUploadUrl(directory, file.name, file.type);
 
-            // 2. PUT the file directly to S3
-            const putRes = await fetch(presignedUrl, {
-                method: "PUT",
-                headers: { "Content-Type": file.type },
-                body: file,
-            });
-            if (!putRes.ok) throw new Error("Failed to upload image");
+            // 2. PUT the file directly to S3 via repository
+            await repo.uploadToS3(presignedUrl, file, file.type);
 
             const key = `${directory}/${file.name}`;
             onChange(key);

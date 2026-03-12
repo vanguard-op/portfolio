@@ -23,7 +23,7 @@ export default function CreateProjectPage() {
         try {
             setLoading(true);
             setError(null);
-            const contentUri = await uploadMarkdown("projects", form.title, content);
+            const contentUri = await repo.uploadMarkdown("projects", form.title, content);
             const stacks = form.stacks.split(",").map(s => s.trim()).filter(Boolean).map(name => ({ name, description: "" }));
             await repo.createProject({
                 title: form.title, overview: form.overview, content_uri: contentUri,

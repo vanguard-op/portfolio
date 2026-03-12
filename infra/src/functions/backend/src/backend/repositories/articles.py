@@ -28,6 +28,7 @@ class ArticlesRepository:
 
     def update(self, article: ArticleModel) -> ArticleModel:
         data = article.model_dump()
+        print(data)
         self.article_table.put_item(Item=data)
         return ArticleModel(**data)
 

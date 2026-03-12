@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useRepository } from "@/lib/hooks/use-repository";
-import { uploadMarkdown, fetchMarkdownContent } from "@/lib/hooks/use-markdown-editor";
+import { uploadMarkdown } from "@/lib/hooks/use-markdown-editor";
 import { FormCard, FormField } from "@/components/admin-form";
 import { MarkdownEditor } from "@/components/markdown-editor";
 import { ImagePicker } from "@/components/image-picker";
@@ -23,7 +23,7 @@ export default function EditArticlePage() {
         repo.getArticleById(id).then(async (a) => {
             setForm({ title: a.title, content_uri: a.content_uri, image_uri: a.image.uri, image_alt: a.image.alt_text });
             if (a.content_url) {
-                const md = await fetchMarkdownContent(a.content_url);
+                const md = await repo.fetchMarkdown(a.content_url);
                 setContent(md);
             }
         }).catch(() => setError("Failed to load article.")).finally(() => setFetching(false));
@@ -36,7 +36,7 @@ export default function EditArticlePage() {
         try {
             setLoading(true);
             setError(null);
-            const contentUri = await uploadMarkdown("articles", form.title, content);
+            const contentUri = await repo.uploadMarkdown("articles", form.title, content);
             const existing = await repo.getArticleById(id);
             await repo.updateArticle(id, {
                 ...existing,

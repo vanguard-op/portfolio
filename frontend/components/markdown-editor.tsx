@@ -1,5 +1,6 @@
 "use client";
 
+import { markdownToHtml } from "@/lib/utilities/markdown";
 import React, { useState } from "react";
 import { FiEye, FiEdit3 } from "react-icons/fi";
 
@@ -40,9 +41,9 @@ export function MarkdownEditor({ value, onChange, label = "Content", placeholder
 
             {preview ? (
                 <div
-                    className="min-h-[200px] w-full bg-neutral-900 border border-neutral-700 rounded-xl px-4 py-3 text-sm text-neutral-200 prose prose-invert prose-sm max-w-none overflow-auto"
+                    className="min-h-[200px] w-full bg-neutral-900 border border-neutral-700 rounded-xl px-4 py-3 text-sm text-neutral-200 prose prose-invert prose-sm max-w-none overflow-auto markdown-content dark"
                     style={{ minHeight: `${rows * 1.5}rem` }}
-                    dangerouslySetInnerHTML={{ __html: value ? simpleMarkdownToHtml(value) : '<span class="text-neutral-600">Nothing to preview</span>' }}
+                    dangerouslySetInnerHTML={{ __html: value ? markdownToHtml(value) : '<span class="text-neutral-600">Nothing to preview</span>' }}
                 />
             ) : (
                 <textarea
@@ -58,19 +59,4 @@ export function MarkdownEditor({ value, onChange, label = "Content", placeholder
             {hint && <p className="text-xs text-neutral-500">{hint}</p>}
         </div>
     );
-}
-
-/** Very lightweight markdown → HTML for the preview pane */
-function simpleMarkdownToHtml(md: string): string {
-    return md
-        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-        .replace(/^### (.+)$/gm, "<h3 class='text-base font-semibold mt-4 mb-1 text-neutral-100'>$1</h3>")
-        .replace(/^## (.+)$/gm, "<h2 class='text-lg font-semibold mt-5 mb-2 text-neutral-100'>$1</h2>")
-        .replace(/^# (.+)$/gm, "<h1 class='text-xl font-bold mt-6 mb-3 text-neutral-100'>$1</h1>")
-        .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-        .replace(/\*(.+?)\*/g, "<em>$1</em>")
-        .replace(/`(.+?)`/g, "<code class='px-1 py-0.5 bg-neutral-800 rounded text-blue-300 text-xs'>$1</code>")
-        .replace(/^[-*] (.+)$/gm, "<li class='ml-4 list-disc'>$1</li>")
-        .replace(/\n{2,}/g, "</p><p class='mb-3'>")
-        .replace(/^(?!<[h|l|p])(.+)$/gm, (line) => `<p class='mb-2 text-neutral-300'>${line}</p>`);
 }

@@ -3,9 +3,11 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useRepository } from "@/lib/hooks/use-repository";
-import { uploadMarkdown, fetchMarkdownContent } from "@/lib/hooks/use-markdown-editor";
+import { uploadMarkdown } from "@/lib/hooks/use-markdown-editor";
 import { FormCard, FormField } from "@/components/admin-form";
 import { MarkdownEditor } from "@/components/markdown-editor";
+import { ServiceSchema } from "@/lib/schema/schema";
+import z from "zod";
 
 export default function EditServicePage() {
     const repo = useRepository();
@@ -15,19 +17,13 @@ export default function EditServicePage() {
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [name, setName] = useState("");
-    const [content, setContent] = useState("");
+    const [form, setForm] = useState<Partial<z.infer<typeof ServiceSchema>>>({});
+
+    const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => setForm(f => ({ ...f, [k]: e.target.value }));
 
     useEffect(() => {
         repo.getServiceById(id).then(async (s) => {
-            setName(s.name);
-            // If description is a URL or S3 key, try to fetch it as markdown
-            if (s.description?.startsWith("http") || s.description?.includes("/")) {
-                const md = await fetchMarkdownContent(s.description);
-                setContent(md || s.description);
-            } else {
-                setContent(s.description);
-            }
+            setForm(s);
         }).catch(() => setError("Failed to load service.")).finally(() => setFetching(false));
     }, [id, repo]);
 
@@ -36,8 +32,7 @@ export default function EditServicePage() {
         try {
             setLoading(true);
             setError(null);
-            const descriptionUri = await uploadMarkdown("services", name, content);
-            await repo.updateService(id, { name, description: descriptionUri });
+            await repo.updateService(id, form);
             router.push("/admin/services");
         } catch (err) {
             setError(err instanceof Error ? err.message : "Failed to update service.");
@@ -50,8 +45,8 @@ export default function EditServicePage() {
 
     return (
         <FormCard title="Edit Service" onSubmit={handleSubmit} loading={loading} backHref="/admin/services" error={error} submitLabel="Update Service">
-            <FormField label="Service Name" value={name} onChange={e => setName(e.target.value)} required />
-            <MarkdownEditor value={content} onChange={setContent} label="Service Description (Markdown)" hint="Saving will overwrite the existing .md file in S3." />
+            <FormField label="Service Name" value={form.name} onChange={set("name")} required />
+            <FormField label="Service Description" value={form.description} onChange={set("description")} required />
         </FormCard>
     );
 }

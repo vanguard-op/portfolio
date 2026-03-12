@@ -13,20 +13,19 @@ export default function CreateReviewPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [form, setForm] = useState({ client_name: "", client_title: "", client_image_uri: "", client_image_alt: "", company_image_uri: "", company_image_alt: "" });
-    const [message, setMessage] = useState("");
+    const [form, setForm] = useState({ client_name: "", client_title: "", client_image_uri: "", client_image_alt: "", company_image_uri: "", company_image_alt: "", message: "" });
     const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => setForm(f => ({ ...f, [k]: e.target.value }));
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!form.client_name || !form.client_title || !message) { setError("Name, title, and message are required."); return; }
+        if (!form.client_name || !form.client_title || !form.message) { setError("Name, title, and message are required."); return; }
         try {
             setLoading(true);
             setError(null);
-            const reviewUri = await uploadMarkdown("reviews", form.client_name, message);
+            // const reviewUri = await repo.uploadMarkdown("reviews", form.client_name, message);
             await repo.createReview({
                 client_name: form.client_name, client_title: form.client_title,
-                message: reviewUri,
+                message: form.message,
                 client_image: { uri: form.client_image_uri, alt_text: form.client_image_alt, url: form.client_image_uri },
                 company_image: { uri: form.company_image_uri, alt_text: form.company_image_alt, url: form.company_image_uri },
             });
@@ -44,7 +43,8 @@ export default function CreateReviewPage() {
                 <FormField label="Client Name" placeholder="Jane Smith" value={form.client_name} onChange={set("client_name")} required />
                 <FormField label="Client Title" placeholder="CEO, Company Name" value={form.client_title} onChange={set("client_title")} required />
             </div>
-            <MarkdownEditor value={message} onChange={setMessage} label="Review Message" rows={8} placeholder={"Write the client's testimonial here..."} hint="Saved as a .md file to S3." />
+            {/* <MarkdownEditor value={message} onChange={setMessage} label="Review Message" rows={8} placeholder={"Write the client's testimonial here..."} hint="Saved as a .md file to S3." /> */}
+            <FormField label="Review Message" placeholder="Write the client's testimonial here..." value={form.message} onChange={set("message")} required />
 
             <div className="border-t border-neutral-800 pt-4 space-y-4">
                 <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">Client Image</p>
