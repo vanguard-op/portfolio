@@ -156,10 +156,12 @@ export default class PortfolioRepositoryProd extends PortfolioRepository {
     }
 
     getMediaUploadUrl = async (directory: string, filename: string, contentType?: string) => {
+        const { signal } = new AbortController()
         const response = await this.fetch('/v1/media/upload-url', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ directory, filename, content_type: contentType }),
+            signal
         });
         if (!response.ok) {
             throw new Error(`Failed to get media upload URL: ${response.statusText}`);
