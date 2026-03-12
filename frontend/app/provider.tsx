@@ -5,7 +5,7 @@ import PortfolioRepositoryMock from "@/lib/repository/mock";
 import PortfolioRepositoryProd from "@/lib/repository/prod";
 
 export function ContextProvider({ children }: Readonly<{ children: React.ReactNode }>) {
-    const portfolioRepo = new PortfolioRepositoryProd("http://localhost:3000");
+    const portfolioRepo = new PortfolioRepositoryProd();
     return (
         <PortfolioRepositoryContext.Provider value={portfolioRepo}>
             {children}

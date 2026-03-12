@@ -16,7 +16,7 @@ module "apis" {
   storages_arn      = module.storages.buckets_arn
 }
 
-module "user_interface" {
-  source = "../../modules/user_interface"
-  # api_domain_name = module.apis.api_domain_name
-}
+# module "user_interface" {
+#   source = "../../modules/user_interface"
+#   # api_domain_name = module.apis.api_domain_name
+# }
