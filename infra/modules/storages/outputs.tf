@@ -6,6 +6,7 @@ output "env_vars" {
 
 output "buckets_arn" {
   value = [
-    module.media_bucket.s3_bucket_arn
+    module.media_bucket.s3_bucket_arn,
+    "${module.media_bucket.s3_bucket_arn}/*"
   ]
 }
