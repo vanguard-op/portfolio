@@ -1,19 +1,13 @@
+export const dynamic = 'force-dynamic'
+
+
 import { BigTitle } from '@/components/title'
 // import React, { useContext } from 'react'
 import RecentArticle from './recent-article'
 import { ArticleCard } from '@/components/card'
-// import PortfolioRepository from '@/lib/repository/base'
-// import { PortfolioRepositoryContext } from '@/lib/context/context'
-// import usePromise from '@/lib/hooks/promise'
 import PortfolioRepositoryProd from '@/lib/repository/prod'
 
 async function Page() {
-  // const portfolioRepo = useContext<PortfolioRepository | null>(PortfolioRepositoryContext);
-  // const {
-  // data: articles,
-  // isLoading: articlesLoading,
-  // error: articlesError,
-  // } = usePromise(portfolioRepo?.getArticles)
   const articles = await (new PortfolioRepositoryProd()).getArticles();
   return (
     <div>

@@ -50,7 +50,7 @@ export function ImagePicker({ label = "Image", value, onChange, hint, directory 
     }, [directory]);
 
     const fetchImages = useCallback(async () => {
-        if (hasLoaded || loadingList) return; 
+        if (hasLoaded || loadingList) return;
         setLoadingList(true);
         try {
             const data = await repo.listMedia(directory, 50);
@@ -103,12 +103,11 @@ export function ImagePicker({ label = "Image", value, onChange, hint, directory 
         setUploadError(null);
         try {
             // 1. Get presigned upload URL via repository
-            const presignedUrl = await repo.getMediaUploadUrl(directory, file.name, file.type);
+            const { url, key } = await repo.getMediaUploadUrl(directory, file.name, file.type);
 
             // 2. PUT the file directly to S3 via repository
-            await repo.uploadToS3(presignedUrl, file, file.type);
+            await repo.uploadToS3(url, file, file.type);
 
-            const key = `${directory}/${file.name}`;
             onChange(key);
             // Add new item to the local list so it shows in dropdown immediately
             const localUrl = URL.createObjectURL(file);

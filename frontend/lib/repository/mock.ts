@@ -27,11 +27,11 @@ export default class PortfolioRepositoryMock extends PortfolioRepository {
             },
             created_at: "2024-01-15T10:00:00Z",
             updated_at: "2024-01-15T10:00:00Z",
-            stacks: [
-                { name: "Next.js", description: "React Framework" },
-                { name: "FastAPI", description: "Python Web Framework" },
-                { name: "PostgreSQL", description: "Database" },
-                { name: "Docker", description: "Containerization" },
+            stack: [
+                "Next.js",
+                "FastAPI",
+                "PostgreSQL",
+                "Docker",
             ],
         },
         {
@@ -47,10 +47,10 @@ export default class PortfolioRepositoryMock extends PortfolioRepository {
             },
             created_at: "2024-02-20T14:30:00Z",
             updated_at: "2024-02-20T14:30:00Z",
-            stacks: [
-                { name: "React", description: "UI Library" },
-                { name: "Node.js", description: "JavaScript Runtime" },
-                { name: "MongoDB", description: "NoSQL Database" },
+            stack: [
+                "React",
+                "Node.js",
+                "MongoDB",
             ],
         },
         {
@@ -66,10 +66,10 @@ export default class PortfolioRepositoryMock extends PortfolioRepository {
             },
             created_at: "2024-03-10T09:15:00Z",
             updated_at: "2024-03-10T09:15:00Z",
-            stacks: [
-                { name: "Python", description: "Programming Language" },
-                { name: "OpenAI", description: "AI API" },
-                { name: "TypeScript", description: "Typed JavaScript" },
+            stack: [
+                "Python",
+                "OpenAI",
+                "TypeScript",
             ],
         },
     ];
@@ -193,34 +193,58 @@ export default class PortfolioRepositoryMock extends PortfolioRepository {
 
     private mockServices: z.infer<typeof ServiceSchema>[] = [
         {
+            id: "service-1",
+            created_at: "2024-01-10T08:00:00Z",
+            updated_at: "2024-01-10T08:00:00Z",
             name: "AI/ML Solutions",
             description: "I create intelligent systems that solve complex problems using machine learning and AI algorithms. Whether it's predictive modeling or natural language processing, I bring data-driven insights to life with precision and efficiency."
         },
         {
+            id: "service-2",
+            created_at: "2024-01-10T08:00:00Z",
+            updated_at: "2024-01-10T08:00:00Z",
             name: "Full-Stack Development",
             description: "I build robust, scalable applications from front to back, ensuring seamless integration and optimal performance. My expertise spans both client-side and server-side technologies, allowing me to deliver complete, end-to-end solutions."
         },
         {
+            id: "service-3",
+            created_at: "2024-01-10T08:00:00Z",
+            updated_at: "2024-01-10T08:00:00Z",
             name: "Front-End Development",
             description: "I craft responsive, user-friendly interfaces with modern tools like React, Next.js, and Vue. My focus is on creating engaging, intuitive designs that enhance user experiences and drive interaction."
         },
         {
+            id: "service-4",
+            created_at: "2024-01-10T08:00:00Z",
+            updated_at: "2024-01-10T08:00:00Z",
             name: "Back-End Development",
             description: "I design and implement efficient back-end systems, ensuring high performance, security, and scalability. Using technologies like Node.js, Django, and Flask, I deliver solid back-end architectures that power seamless applications."
         },
         {
+            id: "service-5",
+            created_at: "2024-01-10T08:00:00Z",
+            updated_at: "2024-01-10T08:00:00Z",
             name: "API Development",
             description: "I specialize in designing and building RESTful APIs and GraphQL services that are fast, scalable, and maintainable. My goal is to ensure your applications can communicate smoothly with external services and data sources, providing a solid interface for users and other systems."
         },
         {
+            id: "service-6",
+            created_at: "2024-01-10T08:00:00Z",
+            updated_at: "2024-01-10T08:00:00Z",
             name: "Web Optimization",
             description: "I optimize websites for speed, performance, and SEO. By analyzing and fine-tuning every aspect, I ensure fast load times and improved user engagement, making your website work smarter, not harder."
         },
         {
+            id: "service-7",
+            created_at: "2024-01-10T08:00:00Z",
+            updated_at: "2024-01-10T08:00:00Z",
             name: "Mobile Development",
             description: "I create powerful mobile applications for both Android and iOS, using tools like React Native and Flutter. I focus on delivering seamless, high-performance mobile experiences that align with your business goals."
         },
         {
+            id: "service-8",
+            created_at: "2024-01-10T08:00:00Z",
+            updated_at: "2024-01-10T08:00:00Z",
             name: "System Architecture",
             description: "I design scalable, high-performance architectures that ensure systems are robust, maintainable, and future-proof. From cloud integration to microservices, I create architectures that grow with your business."
         }

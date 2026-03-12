@@ -7,7 +7,6 @@ import {
     ProjectCreateSchema,
     ServiceSchema,
     ServiceCreateSchema,
-    StackSchema,
     ContactMessageSchema,
 } from "../schema/schema";
 import z from "zod";

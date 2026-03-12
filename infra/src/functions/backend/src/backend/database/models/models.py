@@ -24,7 +24,7 @@ class ProjectCreateModel(BaseModel):
     title: str
     overview: str
     content_uri: str
-    stacks: list[StackModel]
+    stack: list[str]
 
     @computed_field
     @property
@@ -55,7 +55,7 @@ class ProjectModel(BaseModel):
     content_uri: str
     created_at: str
     updated_at: str
-    stacks: list[StackModel]
+    stack: list[str]
 
     @computed_field
     @property

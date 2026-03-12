@@ -17,10 +17,10 @@ export async function uploadMarkdown(repo: PortfolioRepository, directory: strin
     const contentType = "text/markdown";
 
     // 1. Get presigned upload URL via repository
-    const presignedUrl = await repo.getMediaUploadUrl(directory, safeFilename, contentType);
+    const { url, key } = await repo.getMediaUploadUrl(directory, safeFilename, contentType);
 
     // 2. PUT the markdown content to S3 via repository
-    await repo.uploadToS3(presignedUrl, content, contentType);
+    await repo.uploadToS3(url, content, contentType);
 
     // Return the S3 key (directory/filename)
     return `${directory}/${safeFilename}`;

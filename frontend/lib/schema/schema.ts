@@ -1,11 +1,6 @@
 import z from "zod";
 
 
-export const StackSchema = z.object({
-    name: z.string(),
-    description: z.string(),
-});
-
 export const ImageSchema = z.object({
     uri: z.string(),
     alt_text: z.string(),
@@ -21,7 +16,7 @@ export const ProjectSchema = z.object({
     content_url: z.string(),
     created_at: z.string(),
     updated_at: z.string(),
-    stacks: z.array(StackSchema),
+    stack: z.array(z.string()),
 });
 
 export const ProjectCreateSchema = z.object({
@@ -29,7 +24,7 @@ export const ProjectCreateSchema = z.object({
     title: z.string(),
     overview: z.string(),
     content_uri: z.string(),
-    stacks: z.array(StackSchema),
+    stack: z.array(z.string()),
 });
 
 export const ServiceSchema = z.object({

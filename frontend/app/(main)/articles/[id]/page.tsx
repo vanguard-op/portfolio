@@ -42,7 +42,7 @@ async function Page({ params }: { params: Promise<{ id: string }> }) {
                 </div>
                 {/* <div className='intro-3 flex-1'>
                     <ul className='list-disc pl-4 sm:text-3xl text-xl uppercase flex sm:flex-col flex-row flex-wrap gap-y-2 gap-x-12'>
-                        {project?.stacks.map((stack, index) => (
+                        {project?.stack.map((stack, index) => (
                             <li key={index}>{stack.name}</li>
                         ))}
                     </ul>

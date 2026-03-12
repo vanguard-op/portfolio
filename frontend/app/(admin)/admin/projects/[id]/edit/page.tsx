@@ -16,12 +16,12 @@ export default function EditProjectPage() {
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [form, setForm] = useState({ title: "", overview: "", content_uri: "", image_uri: "", image_alt: "", stacks: "" });
+    const [form, setForm] = useState({ title: "", overview: "", content_uri: "", image_uri: "", image_alt: "", stack: "" });
     const [content, setContent] = useState("");
 
     useEffect(() => {
         repo.getProjectById(id).then(async (p) => {
-            setForm({ title: p.title, overview: p.overview, content_uri: p.content_uri, image_uri: p.image.uri, image_alt: p.image.alt_text, stacks: (p.stacks ?? []).map(s => s.name).join(", ") });
+            setForm({ title: p.title, overview: p.overview, content_uri: p.content_uri, image_uri: p.image.uri, image_alt: p.image.alt_text, stack: (p.stack ?? []).join(", ") });
             if (p.content_url) {
                 const md = await repo.fetchMarkdown(p.content_url);
                 setContent(md);
@@ -38,12 +38,12 @@ export default function EditProjectPage() {
             setError(null);
             const contentUri = await repo.uploadMarkdown("projects", form.title, content);
             const existing = await repo.getProjectById(id);
-            const stacks = form.stacks.split(",").map(s => s.trim()).filter(Boolean).map(name => ({ name, description: "" }));
+            const stack = form.stack.split(",").map(s => s.trim()).filter(Boolean);
             await repo.updateProject(id, {
                 ...existing,
                 title: form.title, overview: form.overview, content_uri: contentUri,
                 image: { uri: form.image_uri, alt_text: form.image_alt, url: form.image_uri },
-                stacks,
+                stack,
             });
             router.push("/admin/projects");
         } catch (err) {
@@ -67,7 +67,7 @@ export default function EditProjectPage() {
                 hint="Select an existing image or upload a new one."
             />
             <FormField label="Image Alt Text" value={form.image_alt} onChange={set("image_alt")} />
-            <FormField label="Tech Stacks" value={form.stacks} onChange={set("stacks")} hint="Comma-separated list (e.g. Next.js, FastAPI, PostgreSQL)" />
+            <FormField label="Tech Stack" value={form.stack} onChange={set("stack")} hint="Comma-separated list (e.g. Next.js, FastAPI, PostgreSQL)" />
         </FormCard>
     );
 }

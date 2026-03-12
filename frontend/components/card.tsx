@@ -21,7 +21,7 @@ export const ProjectCard: React.FC<{ project: z.infer<typeof ProjectSchema>, ind
         gsap.fromTo(projectImage.current,
             {
                 opacity: 0,
-                rotate: -25,
+                // rotate: -25,
                 scaleY: 0.8,
                 scaleX: 0.8,
                 transformOrigin: "bottom left",
@@ -45,7 +45,7 @@ export const ProjectCard: React.FC<{ project: z.infer<typeof ProjectSchema>, ind
         gsap.fromTo(projectInfo.current,
             {
                 opacity: 0,
-                rotate: 25,
+                // rotate: 25,
                 scaleY: 0.8,
                 scaleX: 0.8,
                 transformOrigin: "bottom right",
@@ -81,13 +81,13 @@ export const ProjectCard: React.FC<{ project: z.infer<typeof ProjectSchema>, ind
             </div>
             <div ref={projectInfo} className="flex-1">
                 <h3>
-                    <div className={`text-[#403e44] text-[120px] leading-tight tracking-[2.4px] lg:mb-[70px] mb-[8px]`}>{index + 1}</div>
+                    <div className={`text-[#403e44] text-[120px] leading-tight tracking-[2.4px] lg:mb-[70px] mb-[8px]`}>{index < 9 ? "0" : ""}{index + 1}</div>
                     <div className={`mb-6 uppercase text-[38px] tracking-[-1px] font-bold leading-tight`}>{project.title}</div>
                 </h3>
                 <p className={`font-light text-base leading-tight mb-9`}>{project.overview}</p>
-                <ul className="flex flex-row flex-wrap gap-4 mb-10" aria-label="stacks">
-                    {project.stacks.map((citem, cindex) => (
-                        <li key={cindex} className={`text-sm border border-[#403e44] rounded-full px-3.5 py-2.5`}>{citem.name}</li>
+                <ul className="flex flex-row flex-wrap gap-4 mb-10" aria-label="stack">
+                    {project.stack.map((citem, cindex) => (
+                        <li key={cindex} className={`text-sm border border-[#403e44] rounded-full px-3.5 py-2.5 capitalize`}>{citem}</li>
                     ))}
                 </ul>
                 <section>

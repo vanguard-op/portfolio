@@ -81,7 +81,7 @@ export default function ProjectsAdminPage() {
                         <thead>
                             <tr className="border-b border-neutral-800 bg-neutral-900/50">
                                 <th className="text-left px-5 py-3.5 text-xs font-semibold text-neutral-400 uppercase tracking-wider">Project</th>
-                                <th className="text-left px-5 py-3.5 text-xs font-semibold text-neutral-400 uppercase tracking-wider hidden lg:table-cell">Stacks</th>
+                                <th className="text-left px-5 py-3.5 text-xs font-semibold text-neutral-400 uppercase tracking-wider hidden lg:table-cell">Stack</th>
                                 <th className="text-left px-5 py-3.5 text-xs font-semibold text-neutral-400 uppercase tracking-wider hidden md:table-cell">Created</th>
                                 <th className="px-5 py-3.5 text-right text-xs font-semibold text-neutral-400 uppercase tracking-wider">Actions</th>
                             </tr>
@@ -102,11 +102,11 @@ export default function ProjectsAdminPage() {
                                     </td>
                                     <td className="px-5 py-4 hidden lg:table-cell">
                                         <div className="flex flex-wrap gap-1.5">
-                                            {project.stacks?.slice(0, 3).map(s => (
-                                                <span key={s.name} className="px-2 py-0.5 bg-neutral-800 text-neutral-300 text-xs rounded-md">{s.name}</span>
+                                            {project.stack?.slice(0, 3).map(s => (
+                                                <span key={s} className="px-2 py-0.5 bg-neutral-800 text-neutral-300 text-xs rounded-md">{s}</span>
                                             ))}
-                                            {(project.stacks?.length ?? 0) > 3 && (
-                                                <span className="px-2 py-0.5 bg-neutral-800 text-neutral-500 text-xs rounded-md">+{(project.stacks?.length ?? 0) - 3}</span>
+                                            {(project.stack?.length ?? 0) > 3 && (
+                                                <span className="px-2 py-0.5 bg-neutral-800 text-neutral-500 text-xs rounded-md">+{(project.stack?.length ?? 0) - 3}</span>
                                             )}
                                         </div>
                                     </td>

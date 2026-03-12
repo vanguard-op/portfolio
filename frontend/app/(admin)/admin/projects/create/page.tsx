@@ -13,7 +13,7 @@ export default function CreateProjectPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [form, setForm] = useState({ title: "", overview: "", image_uri: "", image_alt: "", stacks: "" });
+    const [form, setForm] = useState({ title: "", overview: "", image_uri: "", image_alt: "", stack: "" });
     const [content, setContent] = useState("");
     const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setForm(f => ({ ...f, [k]: e.target.value }));
 
@@ -24,10 +24,10 @@ export default function CreateProjectPage() {
             setLoading(true);
             setError(null);
             const contentUri = await repo.uploadMarkdown("projects", form.title, content);
-            const stacks = form.stacks.split(",").map(s => s.trim()).filter(Boolean).map(name => ({ name, description: "" }));
+            const stack = form.stack.split(",").map(s => s.trim()).filter(Boolean);
             await repo.createProject({
                 title: form.title, overview: form.overview, content_uri: contentUri,
-                image: { uri: form.image_uri, alt_text: form.image_alt, url: form.image_uri }, stacks,
+                image: { uri: form.image_uri, alt_text: form.image_alt, url: form.image_uri }, stack,
             });
             router.push("/admin/projects");
         } catch (err) {
@@ -41,7 +41,7 @@ export default function CreateProjectPage() {
         <FormCard title="New Project" description="Fill in the details below. The content will be uploaded as a Markdown file." onSubmit={handleSubmit} loading={loading} backHref="/admin/projects" error={error}>
             <FormField label="Title" placeholder="Project name" value={form.title} onChange={set("title")} required />
             <FormTextarea label="Overview" placeholder="Short summary shown in project cards" value={form.overview} onChange={set("overview")} rows={3} required />
-            <MarkdownEditor value={content} onChange={setContent} label="Project Content" placeholder={"# My Project\n\n## Overview\n\nDescribe your project here..."} hint="This will be saved as a .md file in S3." />
+            <MarkdownEditor value={content} onChange={setContent} label="Project Content" placeholder={"Describe your project here..."} hint="This will be saved as a .md file in S3." />
             <ImagePicker
                 label="Cover Image"
                 value={form.image_uri}
@@ -49,7 +49,7 @@ export default function CreateProjectPage() {
                 hint="Select an existing image or upload a new one from your device."
             />
             <FormField label="Image Alt Text" placeholder="Describe the image" value={form.image_alt} onChange={set("image_alt")} />
-            <FormField label="Tech Stacks" placeholder="Next.js, FastAPI, PostgreSQL" value={form.stacks} onChange={set("stacks")} hint="Comma-separated list of technologies used." />
+            <FormField label="Tech Stack" placeholder="Next.js, FastAPI, PostgreSQL" value={form.stack} onChange={set("stack")} hint="Comma-separated list of technologies used." />
         </FormCard>
     );
 }

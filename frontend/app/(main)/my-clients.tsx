@@ -11,16 +11,19 @@ import PortfolioRepository from "@/lib/repository/base";
 import { PortfolioRepositoryContext } from "@/lib/context/context";
 import PortfolioRepositoryProd from "@/lib/repository/prod";
 import { ClientReviewCard } from "@/components/card";
+import { useRepository } from "@/lib/hooks/use-repository";
 
 
 function MyClientReview() {
-    const portfolioRepo = useContext<PortfolioRepository | null>(PortfolioRepositoryContext);
+    const repo = useRepository()
     const {
         data: reviews,
         isLoading: reviewsLoading,
         error: reviewsError,
-    } = usePromise(portfolioRepo?.getReviews)
+    } = usePromise(repo.getReviews)
     // const reviews = await (new PortfolioRepositoryProd()).getReviews();
+    if (reviewsLoading) return <div>Loading...</div>
+    if (reviewsError) return <div>{reviewsError.message}</div>
     return (
         <div>
             <Title id="reviews">My Client Reviews</Title>
