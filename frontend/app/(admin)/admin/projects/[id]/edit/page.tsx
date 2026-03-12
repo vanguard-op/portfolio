@@ -1,0 +1,73 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { useRouter, useParams } from "next/navigation";
+import { useRepository } from "@/lib/hooks/use-repository";
+import { uploadMarkdown } from "@/lib/hooks/use-markdown-editor";
+import { FormCard, FormField, FormTextarea } from "@/components/admin-form";
+import { MarkdownEditor } from "@/components/markdown-editor";
+import { ImagePicker } from "@/components/image-picker";
+
+export default function EditProjectPage() {
+    const repo = useRepository();
+    const router = useRouter();
+    const { id } = useParams<{ id: string }>();
+
+    const [loading, setLoading] = useState(false);
+    const [fetching, setFetching] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [form, setForm] = useState({ title: "", overview: "", content_uri: "", image_uri: "", image_alt: "", stack: "" });
+    const [content, setContent] = useState("");
+
+    useEffect(() => {
+        repo.getProjectById(id).then(async (p) => {
+            setForm({ title: p.title, overview: p.overview, content_uri: p.content_uri, image_uri: p.image.uri, image_alt: p.image.alt_text, stack: (p.stack ?? []).join(", ") });
+            if (p.content_url) {
+                const md = await repo.fetchMarkdown(p.content_url);
+                setContent(md);
+            }
+        }).catch(() => setError("Failed to load project.")).finally(() => setFetching(false));
+    }, [id, repo]);
+
+    const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setForm(f => ({ ...f, [k]: e.target.value }));
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            setLoading(true);
+            setError(null);
+            const contentUri = await repo.uploadMarkdown("projects", form.title, content);
+            const existing = await repo.getProjectById(id);
+            const stack = form.stack.split(",").map(s => s.trim()).filter(Boolean);
+            await repo.updateProject(id, {
+                ...existing,
+                title: form.title, overview: form.overview, content_uri: contentUri,
+                image: { uri: form.image_uri, alt_text: form.image_alt, url: form.image_uri },
+                stack,
+            });
+            router.push("/admin/projects");
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Failed to update project.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (fetching) return <div className="flex items-center justify-center py-24 text-neutral-500 animate-pulse">Loading project...</div>;
+
+    return (
+        <FormCard title="Edit Project" onSubmit={handleSubmit} loading={loading} backHref="/admin/projects" error={error} submitLabel="Update Project">
+            <FormField label="Title" value={form.title} onChange={set("title")} required />
+            <FormTextarea label="Overview" value={form.overview} onChange={set("overview")} rows={3} required />
+            <MarkdownEditor value={content} onChange={setContent} label="Project Content" hint="Saving will overwrite the existing .md file in S3." />
+            <ImagePicker
+                label="Cover Image"
+                value={form.image_uri}
+                onChange={uri => setForm(f => ({ ...f, image_uri: uri }))}
+                hint="Select an existing image or upload a new one."
+            />
+            <FormField label="Image Alt Text" value={form.image_alt} onChange={set("image_alt")} />
+            <FormField label="Tech Stack" value={form.stack} onChange={set("stack")} hint="Comma-separated list (e.g. Next.js, FastAPI, PostgreSQL)" />
+        </FormCard>
+    );
+}

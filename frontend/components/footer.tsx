@@ -1,4 +1,4 @@
-import { FaBehance, FaDribbble, FaFacebook, FaInstagram, FaLinkedin, FaWhatsapp } from "react-icons/fa";
+import { FaBehance, FaDribbble, FaFacebook, FaGithub, FaInstagram, FaLinkedin, FaWhatsapp } from "react-icons/fa";
 import GetInTouch from "@/components/get-in-touch";
 import Link from "next/link";
 import { BsTwitterX } from "react-icons/bs";
@@ -14,7 +14,7 @@ function MainFooter() {
                     <Link href="https://x.com/ahmadkhidir_" target="_blank"><BsTwitterX size={28} /></Link>
                     {/* <Link href=""><FaFacebook size={28} /></Link> */}
                     <Link href="https://www.linkedin.com/in/ahmad-khidir" target="_blank"><FaLinkedin size={28} /></Link>
-                    <Link href="https://www.instagram.com/ahmadkhidir__" target="_blank"><FaInstagram size={28} /></Link>
+                    <Link href="https://github.com/ahmadkhidir" target="_blank"><FaGithub size={28} /></Link>
                     <Link href={`https://wa.me/9012716734?text=${text}`} target="_blank"><FaWhatsapp size={28} /></Link>
                     {/* <Link href="#"><FaDribbble size={28} /></Link> */}
                 </div>
