@@ -20,7 +20,7 @@ def get_s3_object_url(params: PresignParams) -> str:
     return s3_client.generate_presigned_url(
         "get_object",
         Params={"Bucket": bucket, "Key": key},
-        ExpiresIn=params.get("expires_in") or 5 * 3600,
+        ExpiresIn=params.get("expires_in") or 10 * 3600,
     )
 
 
