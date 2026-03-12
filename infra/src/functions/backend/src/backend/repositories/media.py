@@ -24,4 +24,6 @@ class MediaRepository:
 
     def get_media_url(self, key: str) -> str:
         """Get media url from s3"""
-        return s3.get_media_url(key)
+        url = s3.get_media_url(key)
+        print("media url: ", url)
+        return url
