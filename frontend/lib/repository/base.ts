@@ -15,7 +15,7 @@ export default abstract class PortfolioRepository {
     protected fetch: (endpoint: string, init?: RequestInit) => Promise<Response>;
     protected accessToken: string | undefined;
     protected baseURL: string;
-    constructor(baseURL: string = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.API_BASE_URL || "") {
+    constructor(baseURL: string = process.env.NEXT_PUBLIC_API_BASE_URL ?? process.env.API_BASE_URL ?? "") {
         this.baseURL = baseURL;
         this.fetch = async (endpoint: string, init?: RequestInit) => {
             const response = await fetch(

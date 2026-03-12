@@ -1,7 +1,7 @@
 import markdownit from 'markdown-it'
 
 export function markdownToHtml(content: string): string {
-    const mediaBaseUrl = "http://localhost:3000/v1/"
+    const mediaBaseUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL ?? process.env.API_BASE_URL}/v1/`
     const md = markdownit({
         html: true,
         linkify: true,
