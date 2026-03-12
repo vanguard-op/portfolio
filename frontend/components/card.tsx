@@ -67,7 +67,7 @@ export const ProjectCard: React.FC<{ project: z.infer<typeof ProjectSchema>, ind
             }
         );
     }, [projectImage, projectInfo]);
-
+    console.log("Image url", project.image.url)
     return (
         <article className="flex lg:flex-row flex-col gap-[50px] pb-[60px] border-b border-b-[#403e44]">
             <div ref={projectImage} className={`flex-1 h-auto`}>
